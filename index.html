@@ -199,6 +199,12 @@
     from { opacity: 0; transform: translateY(-7px) scale(.97); }
   }
 
+  /* drag a card onto another section to move it */
+  li.task.dragging { opacity: .45; }
+  body.dragging-now .section.empty-hidden { display: block; }
+  .section.dropzone > h2 { color: var(--red); }
+  .section.dropzone > h2::after { border-top-color: var(--red); }
+
   /* a paper-form tick box */
   .box {
     appearance: none; -webkit-appearance: none;
@@ -458,6 +464,7 @@ function init(DATA) {
   let done = new Set(load("done", []));
   let cut = load("cut", {});            // id -> {note, ts}
   let split = load("split", {});        // id -> {ts, into: [id, id]}
+  let moved = load("moved", {});        // id -> section id, for drag-and-drop moves
   let custom = load("custom", []);
   let ledger = load("ledger", []);      // append-only event log
   let unsynced = load("unsynced", 0);
@@ -481,11 +488,11 @@ function init(DATA) {
   }
 
   function persist() {
-    save("done", [...done]); save("cut", cut); save("split", split); save("custom", custom);
+    save("done", [...done]); save("cut", cut); save("split", split); save("moved", moved); save("custom", custom);
     save("ledger", ledger); save("unsynced", unsynced);
   }
 
-  const allTasks = () => DEFAULT_TASKS.concat(custom);
+  const allTasks = () => DEFAULT_TASKS.concat(custom).map(t => moved[t.id] ? { ...t, s: moved[t.id] } : t);
   const findTask = id => allTasks().find(t => t.id === id);
   const secName = id => (SECTIONS.find(s => s.id === id) || {}).name || id;
 
@@ -723,7 +730,7 @@ function init(DATA) {
         const data = JSON.parse(r.result);
         if (!Array.isArray(data.events)) throw new Error("no events");
         if (!confirm("Import replaces the current board state with the ledger's history. Continue?")) return;
-        done = new Set(); cut = {}; split = {}; custom = []; ledger = data.events;
+        done = new Set(); cut = {}; split = {}; moved = {}; custom = []; ledger = data.events;
         for (const e of ledger) {
           if (e.type === "added" && !DEFAULT_TASKS.some(t => t.id === e.id) && !custom.some(t => t.id === e.id)) {
             custom.push({ id: e.id, s: e.section || SECTIONS[0].id, t: e.title, chips: [["gray", "added by me"]] });
@@ -731,6 +738,7 @@ function init(DATA) {
           if (e.type === "done") { done.add(e.id); delete cut[e.id]; }
           if (e.type === "cut") { cut[e.id] = { note: e.note, ts: e.ts }; done.delete(e.id); }
           if (e.type === "split") { split[e.id] = { ts: e.ts }; }
+          if (e.type === "moved" && e.section) { moved[e.id] = e.section; }
           if (e.type === "restored") { done.delete(e.id); delete cut[e.id]; }
         }
         unsynced = 0; persist(); render();
@@ -816,6 +824,19 @@ function init(DATA) {
         ${chipsHtml(t)}
       </div>
       <button class="cutbtn" title="Remove from list (with a note)">✕</button>`;
+
+    li.draggable = true;
+    li.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text/plain", t.id);
+      e.dataTransfer.effectAllowed = "move";
+      li.classList.add("dragging");
+      document.body.classList.add("dragging-now");
+    });
+    li.addEventListener("dragend", () => {
+      li.classList.remove("dragging");
+      document.body.classList.remove("dragging-now");
+      for (const s of $sections.children) s.classList.remove("dropzone");
+    });
 
     li.querySelector(".box").addEventListener("change", (e) => {
       if (!e.target.checked) return;
@@ -904,6 +925,17 @@ function init(DATA) {
       el.dataset.sec = sec.id;
       if (sec.id === hoverSec) el.classList.add("live");
       el.innerHTML = `<h2>${sec.name} <span class="count">· ${items.length}</span></h2>`;
+      el.addEventListener("dragover", e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        if (hoverSec !== sec.id) { hoverSec = sec.id; pinHover(); }
+        el.classList.add("dropzone");
+      });
+      el.addEventListener("dragleave", () => el.classList.remove("dropzone"));
+      el.addEventListener("drop", e => {
+        e.preventDefault();
+        moveTask(e.dataTransfer.getData("text/plain"), sec.id);
+      });
       const clip = document.createElement("div");
       clip.className = "tasks-clip";
       const ul = document.createElement("ul");
@@ -917,6 +949,16 @@ function init(DATA) {
     renderDrawers();
     renderProgress();
     renderLedgerPill();
+  }
+
+  function moveTask(id, secId) {
+    const t = findTask(id);
+    if (!t || t.s === secId) return;
+    moved[id] = secId;
+    logEvent("moved", id, "→ " + secName(secId));
+    render();
+    const el = $sections.querySelector(`li[data-id="${id}"]`);
+    if (el) el.classList.add("newborn");
   }
 
   function fmtWhen(ts) {
