@@ -169,9 +169,10 @@
     #sections .section { margin-left: -30px; padding-left: 30px; }
     .tasks-clip { grid-template-rows: 0fr; opacity: .25; }
     .section:hover .tasks-clip,
+    .section.live .tasks-clip,
     .section:has(.cutform, .splitform) .tasks-clip,
     .section:has(:focus-visible) .tasks-clip { grid-template-rows: 1fr; opacity: 1; }
-    .section:hover > h2 { color: var(--ink); }
+    .section:hover > h2, .section.live > h2 { color: var(--ink); }
   }
 
   ul.tasks { list-style: none; }
@@ -784,6 +785,19 @@ function init(DATA) {
   /* ---------- rendering ---------- */
   const $sections = document.getElementById("sections");
 
+  /* re-renders replace the DOM and the browser won't re-evaluate :hover until the
+     mouse moves — so track the hovered section and re-pin it across renders */
+  let hoverSec = null;
+  function pinHover() {
+    for (const el of $sections.children) el.classList.toggle("live", el.dataset.sec === hoverSec);
+  }
+  $sections.addEventListener("pointerover", e => {
+    const s = e.target.closest(".section");
+    const id = s ? s.dataset.sec : null;
+    if (id !== hoverSec) { hoverSec = id; pinHover(); }
+  });
+  $sections.addEventListener("pointerleave", () => { hoverSec = null; pinHover(); });
+
   function chipsHtml(t) {
     const chips = (t.chips || []).map(([c, txt]) => `<span class="chip ${c}">${txt}</span>`);
     if (t.re) chips.push(`<span class="chip tag">${t.re}</span>`);
@@ -887,6 +901,8 @@ function init(DATA) {
       const items = allTasks().filter(t => t.s === sec.id && !done.has(t.id) && !cut[t.id] && !split[t.id]);
       const el = document.createElement("div");
       el.className = "section";
+      el.dataset.sec = sec.id;
+      if (sec.id === hoverSec) el.classList.add("live");
       el.innerHTML = `<h2>${sec.name} <span class="count">· ${items.length}</span></h2>`;
       const clip = document.createElement("div");
       clip.className = "tasks-clip";
