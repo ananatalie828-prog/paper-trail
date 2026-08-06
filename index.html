@@ -848,10 +848,37 @@ function init(DATA) {
     });
 
     const titleEl = li.querySelector(".title");
-    titleEl.title = "Click to split into two to-dos";
+    titleEl.title = "Click to split into two · double-click to send to calendar";
+    let titleTimer = null;
+
+    li.addEventListener("dblclick", e => {
+      clearTimeout(titleTimer);
+      if (e.target.closest(".box, .cutbtn, .cutform, .splitform")) return;
+      if (li.classList.contains("checked")) return;
+      const pad = n => String(n).padStart(2, "0");
+      const fmt = x => x.getFullYear() + pad(x.getMonth() + 1) + pad(x.getDate()) + "T" + pad(x.getHours()) + pad(x.getMinutes()) + "00";
+      const start = new Date(); start.setDate(start.getDate() + 1); start.setHours(9, 0, 0, 0);
+      const end = new Date(start.getTime() + 30 * 60000);
+      const url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+        "&text=" + encodeURIComponent(t.t) +
+        "&dates=" + fmt(start) + "/" + fmt(end) +
+        "&details=" + encodeURIComponent((t.d ? t.d + "\n\n" : "") + "Reminder created from Paper Trail — adjust the time before saving.");
+      window.open(url, "_blank");
+      const box = li.querySelector(".box");
+      box.checked = true;
+      li.classList.add("checked");
+      celebrate(box);
+      previewProgress(1);
+      setTimeout(() => li.classList.add("melting"), 650);
+      setTimeout(() => { done.add(t.id); logEvent("done", t.id, "sent to Google Calendar as a reminder"); render(); }, 1750);
+    });
+
     titleEl.addEventListener("click", () => {
       if (li.classList.contains("checked")) return;
       if (li.querySelector(".splitform") || li.querySelector(".cutform")) return;
+      clearTimeout(titleTimer);
+      titleTimer = setTimeout(() => {
+      if (li.classList.contains("checked") || li.querySelector(".splitform") || li.querySelector(".cutform")) return;
       const form = document.createElement("div");
       form.className = "splitform";
       form.innerHTML = `
@@ -884,6 +911,7 @@ function init(DATA) {
           if (el) el.classList.add("newborn");
         }
       };
+      }, 280);
     });
 
     li.querySelector(".cutbtn").addEventListener("click", () => {

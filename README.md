@@ -20,6 +20,11 @@ product:
   reads very differently from a miss.
 - **Split** a task — click its title to divide it into two to-dos; the
   ledger records the split and both halves inherit the original's tags.
+- **Double-click** a task to send it to Google Calendar as a reminder — a
+  prefilled event opens (tomorrow 9am; adjust before saving) and the task
+  checks itself off, with the calendar handoff noted in the ledger.
+- **Drag** a card onto another section to move it; moves are ledger events
+  too.
 - Everything lands in an **append-only event ledger** (`done`, `cut`,
   `restored`, `added`, `split`), each event timestamped and tagged with the
   task's section and category.
