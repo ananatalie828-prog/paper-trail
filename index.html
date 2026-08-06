@@ -6,146 +6,193 @@
 <title>Paper Trail</title>
 <style>
   :root {
-    --bg: #f7f6f3;
-    --card: #ffffff;
-    --ink: #1c1c1e;
-    --ink-soft: #6e6e73;
-    --line: #e6e4df;
-    --accent: #2f6fed;
-    --accent-soft: #e8effd;
-    --done: #9a9aa0;
-    --danger: #b42318;
-    --chip-red: #b42318;   --chip-red-bg: #fdecea;
-    --chip-amber: #92400e; --chip-amber-bg: #fdf3e0;
-    --chip-blue: #1d4ed8;  --chip-blue-bg: #e8effd;
-    --chip-gray: #52525b;  --chip-gray-bg: #efeeeb;
+    --bg: #E6E0D4;
+    --card: #F4F0E7;
+    --ink: #2A241C;
+    --ink-soft: #7E7365;
+    --line: #D2C9B8;
+    --rule: #A99C87;
+    --accent: #53412F;
+    --accent-contrast: #F4F0E7;
+    --ok: #46607A;
+    --warn: #A2703A;
+    --danger: #7A2E28;
+    --done: #A39885;
+    --chip-red: #7A2E28;   --chip-red-bg: #EBDAD5;
+    --chip-amber: #7C5426; --chip-amber-bg: #EBDFC9;
+    --chip-blue: #3E586F;  --chip-blue-bg: #DBE2E8;
+    --chip-gray: #6E6459;  --chip-gray-bg: #E5DFD2;
+    --display: "Didot", "Bodoni 72", "Playfair Display", Georgia, serif;
+    --body-face: "Optima", "Seravek", "Gill Sans", "Segoe UI", sans-serif;
+    --mono: "SF Mono", "Menlo", "Consolas", monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #131315;
-      --card: #1d1d20;
-      --ink: #ececf1;
-      --ink-soft: #9b9ba3;
-      --line: #2c2c31;
-      --accent: #6b9bff;
-      --accent-soft: #1d2a45;
-      --done: #6a6a72;
-      --danger: #ff9d92;
-      --chip-red: #ff9d92;   --chip-red-bg: #3a1f1c;
-      --chip-amber: #f5c98a; --chip-amber-bg: #38290f;
-      --chip-blue: #a7c2ff;  --chip-blue-bg: #1d2a45;
-      --chip-gray: #b8b8c0;  --chip-gray-bg: #27272c;
+      --bg: #17140F;
+      --card: #201C15;
+      --ink: #E8E0CF;
+      --ink-soft: #998D7B;
+      --line: #362F25;
+      --rule: #5C5342;
+      --accent: #C8A97E;
+      --accent-contrast: #1A160F;
+      --ok: #8FA6BB;
+      --warn: #C99A62;
+      --danger: #D28C80;
+      --done: #6F6656;
+      --chip-red: #D28C80;   --chip-red-bg: #3A241F;
+      --chip-amber: #D3AC77; --chip-amber-bg: #362A18;
+      --chip-blue: #A5BCCF;  --chip-blue-bg: #1F2A34;
+      --chip-gray: #ABA08D;  --chip-gray-bg: #2B261E;
     }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: var(--bg); color: var(--ink); }
   body {
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    padding: 40px 20px 120px;
+    font: 15.5px/1.55 var(--body-face);
+    padding: 52px 20px 120px;
   }
-  .wrap { max-width: 760px; margin: 0 auto; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
-  .sub { color: var(--ink-soft); font-size: 14px; margin-top: 4px; }
+  header { text-align: center; }
+  header h1 {
+    font-family: var(--display);
+    font-size: clamp(34px, 7vw, 48px);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+  }
+  .ledger-rule {
+    height: 5px; margin: 14px 0 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .sub { color: var(--ink-soft); font-size: 14px; letter-spacing: .04em; margin-top: 14px; }
 
   .toolbar {
-    margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-    font-size: 13px;
+    margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: center; justify-content: center;
   }
   .pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    border: 1px solid var(--line); background: var(--card); color: var(--ink-soft);
-    border-radius: 99px; padding: 5px 12px; font-size: 12.5px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 7px;
+    border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
+    border-radius: 2px; padding: 7px 13px;
+    font: 500 10.5px var(--mono); letter-spacing: .12em; text-transform: uppercase;
     cursor: pointer;
   }
   .pill:hover { border-color: var(--accent); color: var(--accent); }
-  .pill .dot { width: 8px; height: 8px; border-radius: 99px; background: var(--ink-soft); }
-  .pill.ok .dot { background: #34a853; }
-  .pill.warn .dot { background: #f0a020; }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-soft); }
+  .pill.ok .dot { background: var(--ok); }
+  .pill.warn .dot { background: var(--warn); }
   .pill.static { cursor: default; }
   .pill.static:hover { border-color: var(--line); color: var(--ink-soft); }
 
-  .progress { margin-top: 16px; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .progress { margin-top: 28px; height: 2px; background: var(--line); }
   .progress > div {
     height: 100%; width: 0%;
-    background: linear-gradient(90deg, var(--accent), #7bd88f);
-    border-radius: 99px; transition: width .6s cubic-bezier(.22,1,.36,1);
+    background: var(--accent);
+    transition: width .6s cubic-bezier(.22,1,.36,1);
   }
-  .progress-label { font-size: 13px; color: var(--ink-soft); margin-top: 8px; }
+  .progress-label {
+    font: 400 10.5px var(--mono); letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-soft); margin-top: 10px;
+  }
 
-  .adder { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .adder { margin-top: 26px; display: flex; gap: 10px; flex-wrap: wrap; }
   .adder input[type=text] {
-    flex: 1 1 220px; background: var(--card); color: var(--ink);
-    border: 1px dashed var(--line); border-radius: 10px;
-    padding: 10px 14px; font-size: 14px; outline: none;
+    flex: 1 1 220px; background: transparent; color: var(--ink); text-align: left;
+    border: none; border-bottom: 1px solid var(--rule); border-radius: 0;
+    padding: 9px 2px; font: 14px/1.4 var(--body-face); outline: none;
   }
-  .adder input[type=text]:focus { border-color: var(--accent); border-style: solid; }
+  .adder input[type=text]::placeholder { color: var(--ink-soft); }
+  .adder input[type=text]:focus { border-color: var(--accent); }
   .adder select {
-    background: var(--card); color: var(--ink); border: 1px solid var(--line);
-    border-radius: 10px; padding: 0 10px; font-size: 13px; outline: none;
+    background: transparent; color: var(--ink-soft); border: 1px solid var(--line);
+    border-radius: 2px; padding: 0 10px;
+    font: 500 11px var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    outline: none;
   }
   .adder button {
-    background: var(--accent-soft); color: var(--accent); border: none;
-    border-radius: 10px; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+    background: var(--accent); color: var(--accent-contrast); border: none;
+    border-radius: 2px; padding: 9px 20px;
+    font: 600 12px var(--body-face); letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer;
   }
 
-  .section { margin-top: 34px; }
+  .section { margin-top: 42px; }
   .section > h2 {
-    font-size: 13px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .08em; color: var(--ink-soft); margin-bottom: 12px;
-    display: flex; align-items: baseline; gap: 8px;
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--body-face); font-size: 11.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .24em; color: var(--ink-soft);
+    margin-bottom: 14px;
   }
-  .section > h2 .count { font-weight: 500; }
+  .section > h2::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+  .section > h2 .count { font: 400 11px var(--mono); letter-spacing: 0; }
   .section.empty-hidden { display: none; }
 
   ul.tasks { list-style: none; }
   li.task {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    margin-bottom: 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: 12px;
-    padding: 13px 16px;
+    gap: 13px;
+    padding: 15px 18px;
     align-items: start;
+    position: relative;
     overflow: hidden;
     max-height: 400px;
     transition: opacity .8s ease, filter .8s ease, transform .8s ease,
                 max-height .55s ease .45s, margin-bottom .55s ease .45s,
                 padding .55s ease .45s, border-width .55s ease .45s;
   }
-  li.task:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+  li.task:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
 
+  /* the suit-button checkbox: fasten it to finish */
   .box {
     appearance: none; -webkit-appearance: none;
-    width: 21px; height: 21px; margin-top: 2px;
-    border: 2px solid var(--ink-soft);
-    border-radius: 7px; cursor: pointer; position: relative;
+    width: 22px; height: 22px; margin-top: 1px;
+    border: 1.5px solid var(--ink-soft);
+    border-radius: 50%; cursor: pointer; position: relative;
     background: transparent; flex-shrink: 0;
     transition: background .2s, border-color .2s;
   }
+  .box::before {
+    content: ""; position: absolute; left: 6px; top: 6px;
+    width: 2.5px; height: 2.5px; border-radius: 50%;
+    background: var(--ink-soft);
+    box-shadow: 5px 0 0 var(--ink-soft), 0 5px 0 var(--ink-soft), 5px 5px 0 var(--ink-soft);
+    transition: opacity .2s;
+  }
+  .box:hover { border-color: var(--accent); }
   .box:checked { background: var(--accent); border-color: var(--accent); }
+  .box:checked::before { opacity: 0; }
   .box:checked::after {
-    content: ""; position: absolute; left: 5px; top: 1px;
+    content: ""; position: absolute; left: 7px; top: 3.5px;
     width: 5px; height: 10px;
-    border: solid #fff; border-width: 0 2.5px 2.5px 0;
+    border: solid var(--accent-contrast); border-width: 0 2px 2px 0;
     transform: rotate(45deg);
   }
 
   .task .body { min-width: 0; }
   .task .title {
-    font-weight: 600; font-size: 15px;
+    font-weight: 600; font-size: 15.5px;
     display: inline;
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
-    background-size: 0% 2px;
+    background-size: 0% 1.5px;
     background-position: 0 58%;
     transition: background-size .5s ease, color .4s ease;
   }
   .task .detail { color: var(--ink-soft); font-size: 13.5px; margin-top: 3px; }
-  .chips { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 99px; letter-spacing: .01em; }
+  .chips { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font: 500 10px var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px;
+  }
   .chip.red   { color: var(--chip-red);   background: var(--chip-red-bg); }
   .chip.amber { color: var(--chip-amber); background: var(--chip-amber-bg); }
   .chip.blue  { color: var(--chip-blue);  background: var(--chip-blue-bg); }
@@ -154,7 +201,7 @@
 
   .cutbtn {
     background: none; border: none; color: var(--ink-soft); cursor: pointer;
-    font-size: 16px; line-height: 1; padding: 4px 6px; border-radius: 8px;
+    font-size: 15px; line-height: 1; padding: 4px 6px; border-radius: 2px;
     opacity: 0; transition: opacity .15s ease, color .15s, background .15s;
   }
   li.task:hover .cutbtn { opacity: .7; }
@@ -165,78 +212,118 @@
   .cutform textarea {
     width: 100%; min-height: 64px; resize: vertical;
     background: var(--bg); color: var(--ink);
-    border: 1px solid var(--line); border-radius: 10px;
-    padding: 10px 12px; font: 13.5px/1.45 inherit; outline: none;
+    border: 1px solid var(--line); border-radius: 2px;
+    padding: 10px 12px; font: 13.5px/1.45 var(--body-face); outline: none;
   }
   .cutform textarea:focus { border-color: var(--danger); }
-  .cutform .row { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+  .cutform .row { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
   .cutform button {
-    border: none; border-radius: 9px; padding: 7px 14px;
-    font-size: 13px; font-weight: 600; cursor: pointer;
+    border-radius: 2px; padding: 7px 14px;
+    font: 600 11px var(--body-face); letter-spacing: .08em; text-transform: uppercase;
+    cursor: pointer;
   }
-  .cutform .confirm { background: var(--chip-red-bg); color: var(--danger); }
+  .cutform .confirm { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
   .cutform .cancel { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
   .cutform .hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
 
-  li.task.checked .title { background-size: 100% 2px; color: var(--done); }
+  li.task.checked .title { background-size: 100% 1.5px; color: var(--done); }
   li.task.checked .detail, li.task.checked .chip { opacity: .45; }
 
+  /* the stamp: every action goes on the record */
+  li.task.checked::after {
+    content: "Recorded";
+    position: absolute; right: 46px; top: 50%;
+    font: 500 10px var(--mono); letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid currentColor; border-radius: 2px;
+    padding: 4px 6px 4px 9px;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-50%) rotate(-6deg);
+    animation: stamp .35s cubic-bezier(.2, 1.2, .4, 1) .2s forwards;
+  }
+  li.task.melting.cut::after { content: "Cut"; color: var(--danger); }
+  @keyframes stamp {
+    0%   { opacity: 0;  transform: translateY(-50%) rotate(-6deg) scale(1.7); }
+    100% { opacity: .9; transform: translateY(-50%) rotate(-6deg) scale(1); }
+  }
+
+  /* paper slides off the desk */
   li.task.melting {
     opacity: 0;
-    filter: blur(6px);
-    transform: translateY(14px) scaleY(.6) skewX(-3deg);
-    transform-origin: top center;
+    transform: translate(26px, -6px) rotate(1.5deg);
+    transform-origin: center;
     max-height: 0; margin-bottom: 0;
     padding-top: 0; padding-bottom: 0;
     border-width: 0; pointer-events: none;
   }
-  li.task.melting.cut { filter: blur(6px) grayscale(1); transform: translateY(14px) scaleY(.6) skewX(3deg); }
+  li.task.melting.cut { filter: grayscale(1); transform: translate(26px, 8px) rotate(-2deg); }
 
-  .drawer { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .drawer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 16px; }
   .drawer summary {
-    cursor: pointer; color: var(--ink-soft); font-size: 13.5px; font-weight: 600;
+    cursor: pointer; color: var(--ink-soft);
+    font: 500 11px var(--mono); letter-spacing: .18em; text-transform: uppercase;
     list-style: none; user-select: none;
   }
   .drawer summary::-webkit-details-marker { display: none; }
   .drawer summary::before { content: "▸ "; }
   .drawer[open] summary::before { content: "▾ "; }
-  ul.log-list { list-style: none; margin-top: 10px; }
+  ul.log-list { list-style: none; margin-top: 12px; }
   ul.log-list li {
     display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
     padding: 7px 4px; color: var(--done); font-size: 14px;
   }
   ul.log-list li .t { text-decoration: line-through; }
-  ul.log-list li .note { font-style: italic; font-size: 12.5px; flex-basis: 100%; padding-left: 18px; }
-  ul.log-list li .when { font-size: 11.5px; }
+  ul.log-list li .note { font-style: italic; font-size: 13px; flex-basis: 100%; padding-left: 18px; }
+  ul.log-list li .when { font: 400 10.5px var(--mono); letter-spacing: .06em; }
   ul.log-list button {
     margin-left: auto; background: none; border: 1px solid var(--line);
-    color: var(--ink-soft); border-radius: 8px; padding: 3px 10px;
-    font-size: 12px; cursor: pointer;
+    color: var(--ink-soft); border-radius: 2px; padding: 3px 10px;
+    font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    cursor: pointer;
   }
   ul.log-list button:hover { color: var(--accent); border-color: var(--accent); }
 
-  .all-clear { display: none; text-align: center; margin-top: 60px; color: var(--ink-soft); }
-  .all-clear .big { font-size: 44px; }
-  .all-clear p { margin-top: 8px; font-size: 15px; }
+  .all-clear { display: none; text-align: center; margin-top: 64px; color: var(--ink-soft); }
+  .all-clear .rule-double {
+    height: 5px; margin-bottom: 26px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .all-clear .big {
+    font-family: var(--display); font-size: 26px; color: var(--ink);
+    text-transform: uppercase; letter-spacing: .18em;
+  }
+  .all-clear p { margin-top: 10px; font-size: 14.5px; }
 
-  .footer-note { margin-top: 48px; font-size: 12px; color: var(--ink-soft); text-align: center; }
+  .footer-note {
+    margin-top: 56px; text-align: center;
+    font: 400 10px var(--mono); letter-spacing: .16em; text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition-duration: .01ms !important; transition-delay: 0ms !important;
+      animation-duration: .01ms !important; animation-delay: 0ms !important;
+    }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1 id="app-title">Paper Trail</h1>
+    <div class="ledger-rule"></div>
     <div class="sub" id="app-subtitle"></div>
     <div class="toolbar">
       <button class="pill" id="ledger-pill" title="Ledger file sync"><span class="dot"></span><span id="ledger-label">Ledger: not connected</span></button>
-      <button class="pill" id="export-btn">⬇ Export ledger</button>
-      <button class="pill" id="import-btn">⬆ Import ledger</button>
+      <button class="pill" id="export-btn">Export ledger</button>
+      <button class="pill" id="import-btn">Import ledger</button>
       <input type="file" id="import-input" accept="application/json" hidden>
     </div>
     <div class="progress"><div id="bar"></div></div>
     <div class="progress-label" id="bar-label"></div>
     <div class="adder">
-      <input type="text" id="add-input" placeholder="Add something new to the plate…">
+      <input type="text" id="add-input" placeholder="Add to the record…">
       <select id="add-section"></select>
       <button id="add-btn">Add</button>
     </div>
@@ -245,8 +332,9 @@
   <div id="sections"></div>
 
   <div class="all-clear" id="all-clear">
-    <div class="big">🫠</div>
-    <p>Everything melted. Plate's clean.</p>
+    <div class="rule-double"></div>
+    <div class="big">Nothing outstanding</div>
+    <p>Every item is on the record.</p>
   </div>
 
   <details class="drawer" id="done-drawer" style="display:none">
@@ -500,8 +588,8 @@ function init(DATA) {
       const form = document.createElement("div");
       form.className = "cutform";
       form.innerHTML = `
-        <textarea placeholder="Note for the record — why is this coming off the list? (e.g. traded against X, no longer relevant, handed to Rohan)"></textarea>
-        <div class="hint">This goes in the ledger and the offboarding doc as a conscious cut, not a miss.</div>
+        <textarea placeholder="Note for the record — why is this coming off the list? (e.g. traded against X, no longer relevant, handed off)"></textarea>
+        <div class="hint">This goes in the ledger — and your end-of-project summary — as a conscious cut, not a miss.</div>
         <div class="row">
           <button class="cancel">Cancel</button>
           <button class="confirm">Remove from list</button>
