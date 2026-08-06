@@ -1,0 +1,5 @@
+# private task data and ledgers — the app falls back to sample-data/ without these
+data/
+
+# OS noise
+.DS_Store

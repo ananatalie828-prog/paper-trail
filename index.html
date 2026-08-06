@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meltaway</title>
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --card: #ffffff;
+    --ink: #1c1c1e;
+    --ink-soft: #6e6e73;
+    --line: #e6e4df;
+    --accent: #2f6fed;
+    --accent-soft: #e8effd;
+    --done: #9a9aa0;
+    --danger: #b42318;
+    --chip-red: #b42318;   --chip-red-bg: #fdecea;
+    --chip-amber: #92400e; --chip-amber-bg: #fdf3e0;
+    --chip-blue: #1d4ed8;  --chip-blue-bg: #e8effd;
+    --chip-gray: #52525b;  --chip-gray-bg: #efeeeb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #131315;
+      --card: #1d1d20;
+      --ink: #ececf1;
+      --ink-soft: #9b9ba3;
+      --line: #2c2c31;
+      --accent: #6b9bff;
+      --accent-soft: #1d2a45;
+      --done: #6a6a72;
+      --danger: #ff9d92;
+      --chip-red: #ff9d92;   --chip-red-bg: #3a1f1c;
+      --chip-amber: #f5c98a; --chip-amber-bg: #38290f;
+      --chip-blue: #a7c2ff;  --chip-blue-bg: #1d2a45;
+      --chip-gray: #b8b8c0;  --chip-gray-bg: #27272c;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 40px 20px 120px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+  .sub { color: var(--ink-soft); font-size: 14px; margin-top: 4px; }
+
+  .toolbar {
+    margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    font-size: 13px;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink-soft);
+    border-radius: 99px; padding: 5px 12px; font-size: 12.5px; font-weight: 600;
+    cursor: pointer;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--accent); }
+  .pill .dot { width: 8px; height: 8px; border-radius: 99px; background: var(--ink-soft); }
+  .pill.ok .dot { background: #34a853; }
+  .pill.warn .dot { background: #f0a020; }
+  .pill.static { cursor: default; }
+  .pill.static:hover { border-color: var(--line); color: var(--ink-soft); }
+
+  .progress { margin-top: 16px; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .progress > div {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--accent), #7bd88f);
+    border-radius: 99px; transition: width .6s cubic-bezier(.22,1,.36,1);
+  }
+  .progress-label { font-size: 13px; color: var(--ink-soft); margin-top: 8px; }
+
+  .adder { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .adder input[type=text] {
+    flex: 1 1 220px; background: var(--card); color: var(--ink);
+    border: 1px dashed var(--line); border-radius: 10px;
+    padding: 10px 14px; font-size: 14px; outline: none;
+  }
+  .adder input[type=text]:focus { border-color: var(--accent); border-style: solid; }
+  .adder select {
+    background: var(--card); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 10px; padding: 0 10px; font-size: 13px; outline: none;
+  }
+  .adder button {
+    background: var(--accent-soft); color: var(--accent); border: none;
+    border-radius: 10px; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+
+  .section { margin-top: 34px; }
+  .section > h2 {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--ink-soft); margin-bottom: 12px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .section > h2 .count { font-weight: 500; }
+  .section.empty-hidden { display: none; }
+
+  ul.tasks { list-style: none; }
+  li.task {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    padding: 13px 16px;
+    align-items: start;
+    overflow: hidden;
+    max-height: 400px;
+    transition: opacity .8s ease, filter .8s ease, transform .8s ease,
+                max-height .55s ease .45s, margin-bottom .55s ease .45s,
+                padding .55s ease .45s, border-width .55s ease .45s;
+  }
+  li.task:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+
+  .box {
+    appearance: none; -webkit-appearance: none;
+    width: 21px; height: 21px; margin-top: 2px;
+    border: 2px solid var(--ink-soft);
+    border-radius: 7px; cursor: pointer; position: relative;
+    background: transparent; flex-shrink: 0;
+    transition: background .2s, border-color .2s;
+  }
+  .box:checked { background: var(--accent); border-color: var(--accent); }
+  .box:checked::after {
+    content: ""; position: absolute; left: 5px; top: 1px;
+    width: 5px; height: 10px;
+    border: solid #fff; border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+
+  .task .body { min-width: 0; }
+  .task .title {
+    font-weight: 600; font-size: 15px;
+    display: inline;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-size: 0% 2px;
+    background-position: 0 58%;
+    transition: background-size .5s ease, color .4s ease;
+  }
+  .task .detail { color: var(--ink-soft); font-size: 13.5px; margin-top: 3px; }
+  .chips { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 99px; letter-spacing: .01em; }
+  .chip.red   { color: var(--chip-red);   background: var(--chip-red-bg); }
+  .chip.amber { color: var(--chip-amber); background: var(--chip-amber-bg); }
+  .chip.blue  { color: var(--chip-blue);  background: var(--chip-blue-bg); }
+  .chip.gray  { color: var(--chip-gray);  background: var(--chip-gray-bg); }
+  .chip.tag   { color: var(--ink-soft); background: transparent; border: 1px solid var(--line); }
+
+  .cutbtn {
+    background: none; border: none; color: var(--ink-soft); cursor: pointer;
+    font-size: 16px; line-height: 1; padding: 4px 6px; border-radius: 8px;
+    opacity: 0; transition: opacity .15s ease, color .15s, background .15s;
+  }
+  li.task:hover .cutbtn { opacity: .7; }
+  .cutbtn:hover { opacity: 1 !important; color: var(--danger); background: var(--chip-red-bg); }
+  @media (hover: none) { .cutbtn { opacity: .5; } }
+
+  .cutform { grid-column: 1 / -1; margin-top: 4px; }
+  .cutform textarea {
+    width: 100%; min-height: 64px; resize: vertical;
+    background: var(--bg); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 12px; font: 13.5px/1.45 inherit; outline: none;
+  }
+  .cutform textarea:focus { border-color: var(--danger); }
+  .cutform .row { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+  .cutform button {
+    border: none; border-radius: 9px; padding: 7px 14px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .cutform .confirm { background: var(--chip-red-bg); color: var(--danger); }
+  .cutform .cancel { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
+  .cutform .hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
+
+  li.task.checked .title { background-size: 100% 2px; color: var(--done); }
+  li.task.checked .detail, li.task.checked .chip { opacity: .45; }
+
+  li.task.melting {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(14px) scaleY(.6) skewX(-3deg);
+    transform-origin: top center;
+    max-height: 0; margin-bottom: 0;
+    padding-top: 0; padding-bottom: 0;
+    border-width: 0; pointer-events: none;
+  }
+  li.task.melting.cut { filter: blur(6px) grayscale(1); transform: translateY(14px) scaleY(.6) skewX(3deg); }
+
+  .drawer { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .drawer summary {
+    cursor: pointer; color: var(--ink-soft); font-size: 13.5px; font-weight: 600;
+    list-style: none; user-select: none;
+  }
+  .drawer summary::-webkit-details-marker { display: none; }
+  .drawer summary::before { content: "▸ "; }
+  .drawer[open] summary::before { content: "▾ "; }
+  ul.log-list { list-style: none; margin-top: 10px; }
+  ul.log-list li {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    padding: 7px 4px; color: var(--done); font-size: 14px;
+  }
+  ul.log-list li .t { text-decoration: line-through; }
+  ul.log-list li .note { font-style: italic; font-size: 12.5px; flex-basis: 100%; padding-left: 18px; }
+  ul.log-list li .when { font-size: 11.5px; }
+  ul.log-list button {
+    margin-left: auto; background: none; border: 1px solid var(--line);
+    color: var(--ink-soft); border-radius: 8px; padding: 3px 10px;
+    font-size: 12px; cursor: pointer;
+  }
+  ul.log-list button:hover { color: var(--accent); border-color: var(--accent); }
+
+  .all-clear { display: none; text-align: center; margin-top: 60px; color: var(--ink-soft); }
+  .all-clear .big { font-size: 44px; }
+  .all-clear p { margin-top: 8px; font-size: 15px; }
+
+  .footer-note { margin-top: 48px; font-size: 12px; color: var(--ink-soft); text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="app-title">Meltaway</h1>
+    <div class="sub" id="app-subtitle"></div>
+    <div class="toolbar">
+      <button class="pill" id="ledger-pill" title="Ledger file sync"><span class="dot"></span><span id="ledger-label">Ledger: not connected</span></button>
+      <button class="pill" id="export-btn">⬇ Export ledger</button>
+      <button class="pill" id="import-btn">⬆ Import ledger</button>
+      <input type="file" id="import-input" accept="application/json" hidden>
+    </div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="progress-label" id="bar-label"></div>
+    <div class="adder">
+      <input type="text" id="add-input" placeholder="Add something new to the plate…">
+      <select id="add-section"></select>
+      <button id="add-btn">Add</button>
+    </div>
+  </header>
+
+  <div id="sections"></div>
+
+  <div class="all-clear" id="all-clear">
+    <div class="big">🫠</div>
+    <p>Everything melted. Plate's clean.</p>
+  </div>
+
+  <details class="drawer" id="done-drawer" style="display:none">
+    <summary id="done-summary"></summary>
+    <ul class="log-list" id="done-list"></ul>
+  </details>
+
+  <details class="drawer" id="cut-drawer" style="display:none">
+    <summary id="cut-summary"></summary>
+    <ul class="log-list" id="cut-list"></ul>
+  </details>
+
+  <div class="footer-note">meltaway · every check-off and cut is timestamped in the ledger</div>
+</div>
+
+<script>
+/* ---------- data loading: data/tasks.js (private) with sample fallback ---------- */
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+(async function boot() {
+  try { await loadScript("data/tasks.js"); }
+  catch { await loadScript("sample-data/tasks.sample.js"); }
+  if (!window.MELTAWAY) {
+    document.getElementById("app-subtitle").textContent =
+      "No task data found. Copy sample-data/tasks.sample.js to data/tasks.js and edit it.";
+    return;
+  }
+  init(window.MELTAWAY);
+})();
+
+function init(DATA) {
+  const NS = "meltaway::" + (DATA.storageKey || "default") + "::";
+  const SECTIONS = DATA.sections;
+  const DEFAULT_TASKS = DATA.tasks;
+
+  document.title = DATA.title || "Meltaway";
+  document.getElementById("app-title").textContent = DATA.title || "Meltaway";
+  document.getElementById("app-subtitle").textContent = DATA.subtitle || "";
+
+  /* ---------- persistence ---------- */
+  const load = (k, fb) => { try { return JSON.parse(localStorage.getItem(NS + k)) ?? fb; } catch { return fb; } };
+  const save = (k, v) => localStorage.setItem(NS + k, JSON.stringify(v));
+
+  let done = new Set(load("done", []));
+  let cut = load("cut", {});            // id -> {note, ts}
+  let custom = load("custom", []);
+  let ledger = load("ledger", []);      // append-only event log
+  let unsynced = load("unsynced", 0);
+
+  /* one-time migration from the pre-repo Desktop version */
+  if (DATA.migrateFrom && done.size === 0 && ledger.length === 0) {
+    try {
+      const oldDone = JSON.parse(localStorage.getItem(DATA.migrateFrom.done) || "[]");
+      const oldCustom = JSON.parse(localStorage.getItem(DATA.migrateFrom.custom) || "[]");
+      if (oldDone.length || oldCustom.length) {
+        done = new Set(oldDone);
+        custom = oldCustom.map(t => ({ id: t.id, s: t.s, t: t.t, d: t.d, chips: t.chips }));
+        for (const t of custom) ledger.push({ ts: null, type: "added", id: t.id, title: t.t, section: t.s, note: "migrated from v1" });
+        for (const id of oldDone) {
+          const t = DEFAULT_TASKS.concat(custom).find(x => x.id === id);
+          ledger.push({ ts: null, type: "done", id, title: t ? t.t : id, section: t ? t.s : null, note: "migrated from v1 (timestamp unknown)" });
+        }
+        persist();
+      }
+    } catch {}
+  }
+
+  function persist() {
+    save("done", [...done]); save("cut", cut); save("custom", custom);
+    save("ledger", ledger); save("unsynced", unsynced);
+  }
+
+  const allTasks = () => DEFAULT_TASKS.concat(custom);
+  const findTask = id => allTasks().find(t => t.id === id);
+  const secName = id => (SECTIONS.find(s => s.id === id) || {}).name || id;
+
+  /* ---------- ledger events ---------- */
+  function logEvent(type, id, note) {
+    const t = findTask(id) || {};
+    ledger.push({
+      ts: new Date().toISOString(),
+      type, id,
+      title: t.t || id,
+      section: t.s || null,
+      sectionName: t.s ? secName(t.s) : null,
+      re: t.re || null,
+      note: note || null,
+    });
+    unsynced++;
+    persist();
+    syncFile();
+    renderLedgerPill();
+  }
+
+  function ledgerObj() {
+    return {
+      app: "meltaway",
+      version: 1,
+      title: DATA.title || "Meltaway",
+      exportedAt: new Date().toISOString(),
+      state: {
+        open: allTasks().filter(t => !done.has(t.id) && !cut[t.id]).map(t => ({ id: t.id, title: t.t, section: secName(t.s), re: t.re || null })),
+        done: [...done].map(id => { const t = findTask(id) || {}; return { id, title: t.t || id, re: t.re || null }; }),
+        cut: Object.entries(cut).map(([id, v]) => { const t = findTask(id) || {}; return { id, title: t.t || id, re: t.re || null, note: v.note, ts: v.ts }; }),
+      },
+      events: ledger,
+    };
+  }
+
+  /* ---------- ledger file sync (File System Access API, Chrome/Edge) ---------- */
+  const FS_OK = "showSaveFilePicker" in window;
+  let fsHandle = null;
+  let fsGranted = false;
+
+  const idb = {
+    open() {
+      return new Promise((res, rej) => {
+        const r = indexedDB.open("meltaway-fs", 1);
+        r.onupgradeneeded = () => r.result.createObjectStore("handles");
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error);
+      });
+    },
+    async get(key) {
+      const db = await this.open();
+      return new Promise((res, rej) => {
+        const q = db.transaction("handles").objectStore("handles").get(key);
+        q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+      });
+    },
+    async set(key, val) {
+      const db = await this.open();
+      return new Promise((res, rej) => {
+        const q = db.transaction("handles", "readwrite").objectStore("handles").put(val, key);
+        q.onsuccess = () => res(); q.onerror = () => rej(q.error);
+      });
+    },
+  };
+
+  async function syncFile() {
+    if (!fsHandle || !fsGranted) return;
+    try {
+      const w = await fsHandle.createWritable();
+      await w.write(JSON.stringify(ledgerObj(), null, 2));
+      await w.close();
+      unsynced = 0; persist(); renderLedgerPill();
+    } catch { fsGranted = false; renderLedgerPill(); }
+  }
+
+  async function connectLedgerFile() {
+    if (!FS_OK) { exportLedger(); return; }
+    try {
+      if (fsHandle && !fsGranted) {
+        const p = await fsHandle.requestPermission({ mode: "readwrite" });
+        if (p === "granted") { fsGranted = true; await syncFile(); return; }
+      }
+      fsHandle = await window.showSaveFilePicker({
+        suggestedName: "ledger.json",
+        types: [{ description: "JSON", accept: { "application/json": [".json"] } }],
+      });
+      await idb.set("ledger", fsHandle);
+      fsGranted = true;
+      await syncFile();
+    } catch { /* user cancelled */ }
+    renderLedgerPill();
+  }
+
+  async function restoreHandle() {
+    if (!FS_OK) return;
+    try {
+      const h = await idb.get("ledger");
+      if (!h) return;
+      fsHandle = h;
+      const p = await h.queryPermission({ mode: "readwrite" });
+      fsGranted = (p === "granted");
+      if (fsGranted && unsynced > 0) await syncFile();
+    } catch {}
+    renderLedgerPill();
+  }
+
+  function exportLedger() {
+    const blob = new Blob([JSON.stringify(ledgerObj(), null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "ledger.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    unsynced = 0; persist(); renderLedgerPill();
+  }
+
+  function importLedger(file) {
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        if (!Array.isArray(data.events)) throw new Error("no events");
+        if (!confirm("Import replaces the current board state with the ledger's history. Continue?")) return;
+        done = new Set(); cut = {}; custom = []; ledger = data.events;
+        for (const e of ledger) {
+          if (e.type === "added" && !DEFAULT_TASKS.some(t => t.id === e.id) && !custom.some(t => t.id === e.id)) {
+            custom.push({ id: e.id, s: e.section || SECTIONS[0].id, t: e.title, chips: [["gray", "added by me"]] });
+          }
+          if (e.type === "done") { done.add(e.id); delete cut[e.id]; }
+          if (e.type === "cut") { cut[e.id] = { note: e.note, ts: e.ts }; done.delete(e.id); }
+          if (e.type === "restored") { done.delete(e.id); delete cut[e.id]; }
+        }
+        unsynced = 0; persist(); render();
+      } catch { alert("That file doesn't look like a meltaway ledger."); }
+    };
+    r.readAsText(file);
+  }
+
+  /* ---------- rendering ---------- */
+  const $sections = document.getElementById("sections");
+
+  function chipsHtml(t) {
+    const chips = (t.chips || []).map(([c, txt]) => `<span class="chip ${c}">${txt}</span>`);
+    if (t.re) chips.push(`<span class="chip tag">${t.re}</span>`);
+    return chips.length ? `<div class="chips">${chips.join("")}</div>` : "";
+  }
+
+  function taskEl(t) {
+    const li = document.createElement("li");
+    li.className = "task";
+    li.dataset.id = t.id;
+    li.innerHTML = `
+      <input type="checkbox" class="box" aria-label="complete task">
+      <div class="body">
+        <span class="title">${t.t}</span>
+        ${t.d ? `<div class="detail">${t.d}</div>` : ""}
+        ${chipsHtml(t)}
+      </div>
+      <button class="cutbtn" title="Remove from list (with a note)">✕</button>`;
+
+    li.querySelector(".box").addEventListener("change", (e) => {
+      if (!e.target.checked) return;
+      li.classList.add("checked");
+      setTimeout(() => li.classList.add("melting"), 650);
+      setTimeout(() => { done.add(t.id); logEvent("done", t.id); render(); }, 1750);
+    });
+
+    li.querySelector(".cutbtn").addEventListener("click", () => {
+      if (li.querySelector(".cutform")) return;
+      const form = document.createElement("div");
+      form.className = "cutform";
+      form.innerHTML = `
+        <textarea placeholder="Note for the record — why is this coming off the list? (e.g. traded against X, no longer relevant, handed to Rohan)"></textarea>
+        <div class="hint">This goes in the ledger and the offboarding doc as a conscious cut, not a miss.</div>
+        <div class="row">
+          <button class="cancel">Cancel</button>
+          <button class="confirm">Remove from list</button>
+        </div>`;
+      li.appendChild(form);
+      const ta = form.querySelector("textarea");
+      ta.focus();
+      form.querySelector(".cancel").onclick = () => form.remove();
+      form.querySelector(".confirm").onclick = () => {
+        const note = ta.value.trim();
+        if (!note) { ta.placeholder = "A note is required — future-you will want the why."; ta.focus(); return; }
+        li.classList.add("checked");
+        setTimeout(() => li.classList.add("melting", "cut"), 250);
+        setTimeout(() => {
+          cut[t.id] = { note, ts: new Date().toISOString() };
+          logEvent("cut", t.id, note);
+          render();
+        }, 1350);
+      };
+    });
+    return li;
+  }
+
+  function render() {
+    $sections.innerHTML = "";
+    for (const sec of SECTIONS) {
+      const items = allTasks().filter(t => t.s === sec.id && !done.has(t.id) && !cut[t.id]);
+      const el = document.createElement("div");
+      el.className = "section";
+      el.innerHTML = `<h2>${sec.name} <span class="count">· ${items.length}</span></h2>`;
+      const ul = document.createElement("ul");
+      ul.className = "tasks";
+      for (const t of items) ul.appendChild(taskEl(t));
+      el.appendChild(ul);
+      if (items.length === 0) el.classList.add("empty-hidden");
+      $sections.appendChild(el);
+    }
+    renderDrawers();
+    renderProgress();
+    renderLedgerPill();
+  }
+
+  function fmtWhen(ts) {
+    if (!ts) return "";
+    const d = new Date(ts);
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+      " " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  }
+
+  function renderDrawers() {
+    const doneTasks = allTasks().filter(t => done.has(t.id));
+    const dd = document.getElementById("done-drawer");
+    dd.style.display = doneTasks.length ? "" : "none";
+    document.getElementById("done-summary").textContent = `Done (${doneTasks.length}) — click to review or restore`;
+    const dl = document.getElementById("done-list");
+    dl.innerHTML = "";
+    for (const t of doneTasks) {
+      const ev = [...ledger].reverse().find(e => e.id === t.id && e.type === "done");
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="t">✓ ${t.t}</span><span class="when">${ev ? fmtWhen(ev.ts) : ""}</span><button>restore</button>`;
+      li.querySelector("button").onclick = () => { done.delete(t.id); logEvent("restored", t.id); render(); };
+      dl.appendChild(li);
+    }
+
+    const cutTasks = allTasks().filter(t => cut[t.id]);
+    const cd = document.getElementById("cut-drawer");
+    cd.style.display = cutTasks.length ? "" : "none";
+    document.getElementById("cut-summary").textContent = `Cut with a note (${cutTasks.length}) — click to review or restore`;
+    const cl = document.getElementById("cut-list");
+    cl.innerHTML = "";
+    for (const t of cutTasks) {
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="t">✂︎ ${t.t}</span><span class="when">${fmtWhen(cut[t.id].ts)}</span><button>restore</button>
+        <span class="note">“${cut[t.id].note}”</span>`;
+      li.querySelector("button").onclick = () => { delete cut[t.id]; logEvent("restored", t.id); render(); };
+      cl.appendChild(li);
+    }
+  }
+
+  function renderProgress() {
+    const total = allTasks().length;
+    const d = allTasks().filter(t => done.has(t.id)).length;
+    const c = allTasks().filter(t => cut[t.id]).length;
+    const pct = total ? Math.round(((d + c) / total) * 100) : 0;
+    document.getElementById("bar").style.width = pct + "%";
+    document.getElementById("bar-label").textContent =
+      `${total - d - c} open · ${d} done · ${c} cut · ${pct}%`;
+    document.getElementById("all-clear").style.display = (d + c === total && total > 0) ? "block" : "none";
+  }
+
+  function renderLedgerPill() {
+    const pill = document.getElementById("ledger-pill");
+    const label = document.getElementById("ledger-label");
+    pill.classList.remove("ok", "warn");
+    if (!FS_OK) {
+      if (unsynced > 0) { pill.classList.add("warn"); label.textContent = `Ledger: ${unsynced} unexported change${unsynced === 1 ? "" : "s"} — export`; }
+      else { label.textContent = "Ledger: exported"; pill.classList.add("ok"); }
+      return;
+    }
+    if (fsHandle && fsGranted) { pill.classList.add("ok"); label.textContent = "Ledger: auto-saving to file"; }
+    else if (fsHandle) { pill.classList.add("warn"); label.textContent = `Ledger: click to reconnect (${unsynced} pending)`; }
+    else { pill.classList.add(unsynced > 0 ? "warn" : ""); label.textContent = "Ledger: connect a file"; }
+  }
+
+  /* ---------- adder ---------- */
+  const addSel = document.getElementById("add-section");
+  for (const s of SECTIONS) {
+    const o = document.createElement("option");
+    o.value = s.id; o.textContent = s.name;
+    addSel.appendChild(o);
+  }
+  const addInput = document.getElementById("add-input");
+  function addTask() {
+    const v = addInput.value.trim();
+    if (!v) return;
+    const t = { id: "c-" + Date.now(), s: addSel.value, t: v, chips: [["gray", "added by me"]] };
+    custom.push(t);
+    logEvent("added", t.id);
+    addInput.value = "";
+    render();
+  }
+  document.getElementById("add-btn").onclick = addTask;
+  addInput.addEventListener("keydown", e => { if (e.key === "Enter") addTask(); });
+
+  /* ---------- toolbar wiring ---------- */
+  document.getElementById("ledger-pill").onclick = connectLedgerFile;
+  document.getElementById("export-btn").onclick = exportLedger;
+  document.getElementById("import-btn").onclick = () => document.getElementById("import-input").click();
+  document.getElementById("import-input").addEventListener("change", e => {
+    if (e.target.files[0]) importLedger(e.target.files[0]);
+    e.target.value = "";
+  });
+
+  render();
+  restoreHandle();
+}
+</script>
+</body>
+</html>
