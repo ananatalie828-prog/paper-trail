@@ -6,75 +6,83 @@
 <title>Paper Trail</title>
 <style>
   :root {
-    --bg: #F6F6F6;
-    --card: #FFFFFF;
-    --ink: #272727;
-    --ink-soft: #6E6E6E;
-    --line: #E0E0E0;
-    --red: #B4222D;
-    --red-soft: #F7E3E4;
-    --navy: #1F3A5F;
-    --navy-soft: #E4EAF2;
-    --lattice: rgba(31, 58, 95, .38);
-    --ok: #1F3A5F;
-    --warn: #9A6B15;
-    --done: #ABABAB;
-    --chip-red: #B4222D;   --chip-red-bg: #F7E3E4;
-    --chip-amber: #9A6B15; --chip-amber-bg: #F3EAD3;
-    --chip-blue: #1F3A5F;  --chip-blue-bg: #E4EAF2;
-    --chip-gray: #6E6E6E;  --chip-gray-bg: #EDEDED;
-    --sans: "Avenir Next", "Avenir", "Futura", "Century Gothic", "Segoe UI", sans-serif;
+    --bg: #EFEBE2;
+    --card: #FCFAF5;
+    --ink: #2B2620;
+    --ink-soft: #7A7164;
+    --line: #DDD5C6;
+    --rule: #A99C87;
+    --red: #A8232E;
+    --red-soft: #F3E0DD;
+    --navy: #24405E;
+    --navy-soft: #E2E8EF;
+    --lattice: rgba(36, 64, 94, .32);
+    --ok: #24405E;
+    --warn: #966A22;
+    --done: #ACA394;
+    --gold: #B98A2E;
+    --chip-red: #A8232E;   --chip-red-bg: #F3E0DD;
+    --chip-amber: #83591C; --chip-amber-bg: #EFE3CA;
+    --chip-blue: #24405E;  --chip-blue-bg: #E2E8EF;
+    --chip-gray: #6E6459;  --chip-gray-bg: #E8E2D5;
+    --display: "Didot", "Bodoni 72", "Playfair Display", Georgia, serif;
+    --body-face: "Avenir Next", "Avenir", "Seravek", "Segoe UI", sans-serif;
+    --mono: "SF Mono", "Menlo", "Consolas", monospace;
+    --chevron: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2210%22%20height%3D%226%22%3E%3Cpath%20d%3D%22M1%201l4%204%204-4%22%20fill%3D%22none%22%20stroke%3D%22%237A7164%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E");
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #14171C;
-      --card: #1E2229;
-      --ink: #ECEDEF;
-      --ink-soft: #9AA1AB;
-      --line: #313741;
-      --red: #E76470;
-      --red-soft: #3A2226;
-      --navy: #8FAFD9;
-      --navy-soft: #222B38;
-      --lattice: rgba(143, 175, 217, .28);
-      --ok: #8FAFD9;
-      --warn: #D3A651;
-      --done: #5E646D;
-      --chip-red: #E76470;   --chip-red-bg: #3A2226;
-      --chip-amber: #D3A651; --chip-amber-bg: #322A18;
-      --chip-blue: #A5C0E4;  --chip-blue-bg: #222B38;
-      --chip-gray: #A6ACB5;  --chip-gray-bg: #2A2F37;
+      --bg: #171410;
+      --card: #211D17;
+      --ink: #EAE2D2;
+      --ink-soft: #9C9182;
+      --line: #363028;
+      --rule: #5C5342;
+      --red: #E2737C;
+      --red-soft: #3A2323;
+      --navy: #92AECE;
+      --navy-soft: #212B36;
+      --lattice: rgba(146, 174, 206, .24);
+      --ok: #92AECE;
+      --warn: #CDA05C;
+      --done: #6B6353;
+      --gold: #CDA05C;
+      --chip-red: #E2737C;   --chip-red-bg: #3A2323;
+      --chip-amber: #D3AC77; --chip-amber-bg: #342A18;
+      --chip-blue: #A5C0DE;  --chip-blue-bg: #212B36;
+      --chip-gray: #ABA08D;  --chip-gray-bg: #2B261E;
+      --chevron: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2210%22%20height%3D%226%22%3E%3Cpath%20d%3D%22M1%201l4%204%204-4%22%20fill%3D%22none%22%20stroke%3D%22%239C9182%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E");
     }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: var(--bg); color: var(--ink); }
   body {
-    font: 500 15px/1.55 var(--sans);
-    padding: 44px 20px 120px;
+    font: 500 15px/1.55 var(--body-face);
+    padding: 48px 20px 120px;
   }
   .wrap { max-width: 720px; margin: 0 auto; }
   :focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
   header { text-align: center; }
   header h1 {
-    font-size: clamp(36px, 7vw, 52px);
-    font-weight: 800;
-    text-transform: lowercase;
-    letter-spacing: -.015em;
-    line-height: 1.1;
-    color: var(--navy);
+    font-family: var(--display);
+    font-size: clamp(30px, 6vw, 42px);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    line-height: 1.15;
   }
   .lattice {
-    height: 44px; margin-top: 18px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    height: 40px; margin-top: 16px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
     background-image:
       repeating-linear-gradient(63deg, var(--lattice) 0 1px, transparent 1px 15px),
       repeating-linear-gradient(-63deg, var(--lattice) 0 1px, transparent 1px 15px);
   }
   .sub {
     color: var(--ink-soft); font-size: 14px; font-weight: 500;
-    text-transform: lowercase; margin-top: 16px;
+    text-transform: lowercase; margin-top: 14px;
   }
 
   .toolbar {
@@ -83,9 +91,9 @@
   }
   .pill {
     display: inline-flex; align-items: center; gap: 7px;
-    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
     border-radius: 99px; padding: 6px 14px;
-    font: 600 12.5px var(--sans); text-transform: lowercase;
+    font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: lowercase;
     cursor: pointer;
   }
   .pill:hover { border-color: var(--red); color: var(--red); }
@@ -93,57 +101,74 @@
   .pill.ok .dot { background: var(--ok); }
   .pill.warn .dot { background: var(--warn); }
   .pill.static { cursor: default; }
-  .pill.static:hover { border-color: var(--line); color: var(--ink); }
+  .pill.static:hover { border-color: var(--line); color: var(--ink-soft); }
 
   .progress { margin-top: 26px; height: 3px; border-radius: 99px; background: var(--line); overflow: hidden; }
   .progress > div {
     height: 100%; width: 0%;
     background: var(--red); border-radius: 99px;
-    transition: width .6s cubic-bezier(.22,1,.36,1);
+    transition: width .45s cubic-bezier(.22,1,.36,1);
+  }
+  .progress.pulse > div { animation: barpulse .55s ease; }
+  @keyframes barpulse {
+    0% { filter: brightness(1.7); }
+    100% { filter: brightness(1); }
   }
   .progress-label {
-    font: 600 12px var(--sans); text-transform: lowercase;
-    color: var(--ink-soft); margin-top: 9px;
+    font: 500 11px var(--mono); letter-spacing: .12em; text-transform: lowercase;
+    color: var(--ink-soft); margin-top: 10px;
   }
 
   .adder { margin-top: 24px; display: flex; gap: 9px; flex-wrap: wrap; }
   .adder input[type=text] {
     flex: 1 1 220px; background: var(--card); color: var(--ink); text-align: left;
     border: 1px solid var(--line); border-radius: 99px;
-    padding: 9px 16px; font: 500 14px/1.4 var(--sans); outline: none;
+    padding: 9px 16px; font: 500 14px/1.4 var(--body-face); outline: none;
   }
   .adder input[type=text]::placeholder { color: var(--ink-soft); }
   .adder input[type=text]:focus { border-color: var(--red); }
   .adder select {
-    background: var(--card); color: var(--ink-soft); border: 1px solid var(--line);
-    border-radius: 99px; padding: 0 14px;
-    font: 600 12.5px var(--sans); text-transform: lowercase;
-    outline: none;
+    appearance: none; -webkit-appearance: none;
+    background: var(--card) var(--chevron) no-repeat right 13px center;
+    background-size: 10px 6px;
+    color: var(--ink-soft); border: 1px solid var(--line);
+    border-radius: 99px; padding: 9px 32px 9px 15px;
+    font: 500 11px var(--mono); letter-spacing: .06em; text-transform: lowercase;
+    outline: none; cursor: pointer;
   }
+  .adder select:hover, .adder select:focus { border-color: var(--red); color: var(--ink); }
   .adder button {
-    background: var(--red); color: #fff; border: 1px solid var(--red);
+    background: var(--red); color: var(--card); border: 1px solid var(--red);
     border-radius: 99px; padding: 9px 22px;
-    font: 700 13.5px var(--sans); text-transform: lowercase;
+    font: 700 13.5px var(--body-face); text-transform: lowercase;
     cursor: pointer;
   }
   .adder button:hover { filter: brightness(1.08); }
 
-  .section { margin-top: 40px; }
+  .section { margin-top: 38px; }
   .section > h2 {
-    display: flex; align-items: baseline; gap: 12px;
-    font-size: 15px; font-weight: 800; text-transform: lowercase;
-    letter-spacing: -.005em; color: var(--ink);
+    display: flex; align-items: center; gap: 12px;
+    font: 500 11px var(--mono); letter-spacing: .2em; text-transform: lowercase;
+    color: var(--ink-soft);
     margin-bottom: 12px;
   }
-  .section > h2::after { content: ""; flex: 1; border-top: 1px solid var(--line); align-self: center; }
-  .section > h2 .count { font-weight: 700; font-size: 13px; color: var(--red); }
+  .section > h2::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+  .section > h2 .count { color: var(--red); font-weight: 700; letter-spacing: .04em; }
   .section.empty-hidden { display: none; }
+
+  /* hover a section to expand it; its siblings tuck away */
+  .tasks-clip { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .35s ease .08s, opacity .35s ease .08s; }
+  .tasks-clip > ul { min-height: 0; overflow: hidden; }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    #sections:hover .section:not(:hover):not(:focus-within) .tasks-clip { grid-template-rows: 0fr; opacity: .25; }
+    #sections:hover .section:hover > h2 { color: var(--ink); }
+  }
 
   ul.tasks { list-style: none; }
   li.task {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 8px;
     margin-bottom: 9px;
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -157,43 +182,65 @@
                 max-height .55s ease .45s, margin-bottom .55s ease .45s,
                 padding .55s ease .45s, border-width .55s ease .45s;
   }
-  li.task:hover { border-color: color-mix(in srgb, var(--red) 45%, var(--line)); }
+  li.task:hover { border-color: color-mix(in srgb, var(--red) 40%, var(--line)); }
+  li.task.newborn { animation: newborn .45s cubic-bezier(.2, 1.2, .4, 1); }
+  @keyframes newborn {
+    from { opacity: 0; transform: translateY(-7px) scale(.97); }
+  }
 
+  /* the suit-button checkbox: fasten it to finish */
   .box {
     appearance: none; -webkit-appearance: none;
     width: 22px; height: 22px; margin-top: 1px;
     border: 2px solid var(--navy);
     border-radius: 50%; cursor: pointer; position: relative;
     background: transparent; flex-shrink: 0;
-    transition: background .2s, border-color .2s;
+    transition: background .15s, border-color .15s;
+  }
+  .box::before {
+    content: ""; position: absolute; left: 5.5px; top: 5.5px;
+    width: 2.5px; height: 2.5px; border-radius: 50%;
+    background: var(--navy);
+    box-shadow: 4.5px 0 0 var(--navy), 0 4.5px 0 var(--navy), 4.5px 4.5px 0 var(--navy);
+    transition: opacity .15s;
   }
   .box:hover { border-color: var(--red); }
-  .box:checked { background: var(--red); border-color: var(--red); }
+  .box:hover::before { background: var(--red); box-shadow: 4.5px 0 0 var(--red), 0 4.5px 0 var(--red), 4.5px 4.5px 0 var(--red); }
+  .box:checked { background: var(--red); border-color: var(--red); animation: pop .3s cubic-bezier(.3, 1.6, .4, 1); }
+  .box:checked::before { opacity: 0; }
   .box:checked::after {
     content: ""; position: absolute; left: 6px; top: 2.5px;
     width: 5px; height: 10px;
-    border: solid #fff; border-width: 0 2.5px 2.5px 0;
+    border: solid var(--card); border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg);
   }
-  @media (prefers-color-scheme: dark) {
-    .box:checked::after { border-color: #14171C; }
+  @keyframes pop {
+    0% { transform: scale(.75); }
+    60% { transform: scale(1.22); }
+    100% { transform: scale(1); }
   }
 
   .task .body { min-width: 0; }
   .task .title {
     font-weight: 600; font-size: 15px;
     display: inline;
+    cursor: pointer;
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
     background-size: 0% 2px;
     background-position: 0 58%;
     transition: background-size .5s ease, color .4s ease;
   }
+  li.task:not(.checked) .title:hover {
+    text-decoration: underline dotted var(--ink-soft);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
   .task .detail { color: var(--ink-soft); font-size: 13.5px; margin-top: 3px; }
   .chips { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
-    font: 600 11.5px var(--sans); text-transform: lowercase;
-    padding: 2.5px 10px; border-radius: 99px;
+    font: 500 10px var(--mono); letter-spacing: .06em; text-transform: lowercase;
+    padding: 3px 10px; border-radius: 99px;
   }
   .chip.red   { color: var(--chip-red);   background: var(--chip-red-bg); }
   .chip.amber { color: var(--chip-amber); background: var(--chip-amber-bg); }
@@ -210,24 +257,33 @@
   .cutbtn:hover { opacity: 1 !important; color: var(--navy); background: var(--navy-soft); }
   @media (hover: none) { .cutbtn { opacity: .5; } }
 
-  .cutform { grid-column: 1 / -1; margin-top: 4px; }
+  .cutform, .splitform { grid-column: 1 / -1; margin-top: 4px; }
   .cutform textarea {
     width: 100%; min-height: 64px; resize: vertical;
     background: var(--bg); color: var(--ink);
-    border: 1px solid var(--line); border-radius: 12px;
-    padding: 10px 14px; font: 500 13.5px/1.45 var(--sans); outline: none;
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 14px; font: 500 13.5px/1.45 var(--body-face); outline: none;
   }
   .cutform textarea:focus { border-color: var(--navy); }
-  .cutform .row { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
-  .cutform button {
+  .splitform input {
+    width: 100%; margin-bottom: 7px;
+    background: var(--bg); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 9px 14px; font: 500 13.5px/1.4 var(--body-face); outline: none;
+  }
+  .splitform input:focus { border-color: var(--red); }
+  .cutform .row, .splitform .row { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+  .cutform button, .splitform button {
     border-radius: 99px; padding: 7px 16px;
-    font: 700 12.5px var(--sans); text-transform: lowercase;
+    font: 700 12.5px var(--body-face); text-transform: lowercase;
     cursor: pointer;
   }
-  .cutform .confirm { background: var(--card); color: var(--navy); border: 1px solid var(--navy); }
+  .cutform .confirm { background: transparent; color: var(--navy); border: 1px solid var(--navy); }
   .cutform .confirm:hover { background: var(--navy); color: var(--card); }
-  .cutform .cancel { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
-  .cutform .hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
+  .splitform .confirm { background: transparent; color: var(--red); border: 1px solid var(--red); }
+  .splitform .confirm:hover { background: var(--red); color: var(--card); }
+  .cutform .cancel, .splitform .cancel { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
+  .cutform .hint, .splitform .hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
 
   li.task.checked .title { background-size: 100% 2px; color: var(--done); }
   li.task.checked .detail, li.task.checked .chip { opacity: .45; }
@@ -236,17 +292,29 @@
   li.task.checked::after {
     content: "recorded";
     position: absolute; right: 46px; top: 50%;
-    font: 700 11px var(--sans); text-transform: lowercase; letter-spacing: .02em;
+    font: 500 10px var(--mono); letter-spacing: .18em; text-transform: lowercase;
     color: var(--red); border: 1.5px solid currentColor; border-radius: 99px;
-    padding: 3px 11px; background: var(--card);
+    padding: 3px 9px 3px 12px; background: var(--card);
     opacity: 0; pointer-events: none;
     transform: translateY(-50%) rotate(-6deg);
     animation: stamp .35s cubic-bezier(.2, 1.2, .4, 1) .2s forwards;
   }
   li.task.melting.cut::after { content: "cut"; color: var(--navy); }
   @keyframes stamp {
-    0%   { opacity: 0;  transform: translateY(-50%) rotate(-6deg) scale(1.7); }
+    0%   { opacity: 0;   transform: translateY(-50%) rotate(-6deg) scale(1.7); }
     100% { opacity: .95; transform: translateY(-50%) rotate(-6deg) scale(1); }
+  }
+
+  /* the completion burst — a little more than the click deserves */
+  .burst { position: fixed; z-index: 99; pointer-events: none; }
+  .burst i {
+    position: absolute; left: -2px; top: -2px;
+    width: 5px; height: 5px; border-radius: 1.5px;
+    animation: fling var(--dur) cubic-bezier(.15, .8, .3, 1) forwards;
+  }
+  @keyframes fling {
+    from { transform: translate(0, 0) rotate(0); opacity: 1; }
+    to   { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
   }
 
   /* paper slides off the desk */
@@ -263,7 +331,7 @@
   .drawer { margin-top: 46px; border-top: 1px solid var(--line); padding-top: 16px; }
   .drawer summary {
     cursor: pointer; color: var(--ink-soft);
-    font: 700 13px var(--sans); text-transform: lowercase;
+    font: 500 11px var(--mono); letter-spacing: .14em; text-transform: lowercase;
     list-style: none; user-select: none;
   }
   .drawer summary:hover { color: var(--red); }
@@ -277,11 +345,11 @@
   }
   ul.log-list li .t { text-decoration: line-through; }
   ul.log-list li .note { font-style: italic; font-size: 13px; flex-basis: 100%; padding-left: 18px; }
-  ul.log-list li .when { font-size: 11.5px; font-weight: 600; }
+  ul.log-list li .when { font: 400 10.5px var(--mono); letter-spacing: .06em; }
   ul.log-list button {
     margin-left: auto; background: none; border: 1px solid var(--line);
     color: var(--ink-soft); border-radius: 99px; padding: 3px 12px;
-    font: 600 11.5px var(--sans); text-transform: lowercase;
+    font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: lowercase;
     cursor: pointer;
   }
   ul.log-list button:hover { color: var(--red); border-color: var(--red); }
@@ -289,14 +357,14 @@
   .all-clear { display: none; text-align: center; margin-top: 60px; color: var(--ink-soft); }
   .all-clear .lattice { margin: 0 0 26px; }
   .all-clear .big {
-    font-size: 24px; font-weight: 800; text-transform: lowercase;
-    letter-spacing: -.01em; color: var(--navy);
+    font-family: var(--display); font-size: 25px; color: var(--ink);
+    text-transform: uppercase; letter-spacing: .18em;
   }
-  .all-clear p { margin-top: 8px; font-size: 14.5px; }
+  .all-clear p { margin-top: 10px; font-size: 14.5px; }
 
   .footer-note {
     margin-top: 54px; text-align: center;
-    font: 600 11.5px var(--sans); text-transform: lowercase;
+    font: 500 10px var(--mono); letter-spacing: .14em; text-transform: lowercase;
     color: var(--ink-soft);
   }
 
@@ -387,6 +455,7 @@ function init(DATA) {
 
   let done = new Set(load("done", []));
   let cut = load("cut", {});            // id -> {note, ts}
+  let split = load("split", {});        // id -> {ts, into: [id, id]}
   let custom = load("custom", []);
   let ledger = load("ledger", []);      // append-only event log
   let unsynced = load("unsynced", 0);
@@ -410,7 +479,7 @@ function init(DATA) {
   }
 
   function persist() {
-    save("done", [...done]); save("cut", cut); save("custom", custom);
+    save("done", [...done]); save("cut", cut); save("split", split); save("custom", custom);
     save("ledger", ledger); save("unsynced", unsynced);
   }
 
@@ -443,7 +512,7 @@ function init(DATA) {
       title: DATA.title || "Paper Trail",
       exportedAt: new Date().toISOString(),
       state: {
-        open: allTasks().filter(t => !done.has(t.id) && !cut[t.id]).map(t => ({ id: t.id, title: t.t, section: secName(t.s), re: t.re || null })),
+        open: allTasks().filter(t => !done.has(t.id) && !cut[t.id] && !split[t.id]).map(t => ({ id: t.id, title: t.t, section: secName(t.s), re: t.re || null })),
         done: [...done].map(id => { const t = findTask(id) || {}; return { id, title: t.t || id, re: t.re || null }; }),
         cut: Object.entries(cut).map(([id, v]) => { const t = findTask(id) || {}; return { id, title: t.t || id, re: t.re || null, note: v.note, ts: v.ts }; }),
       },
@@ -539,19 +608,63 @@ function init(DATA) {
         const data = JSON.parse(r.result);
         if (!Array.isArray(data.events)) throw new Error("no events");
         if (!confirm("Import replaces the current board state with the ledger's history. Continue?")) return;
-        done = new Set(); cut = {}; custom = []; ledger = data.events;
+        done = new Set(); cut = {}; split = {}; custom = []; ledger = data.events;
         for (const e of ledger) {
           if (e.type === "added" && !DEFAULT_TASKS.some(t => t.id === e.id) && !custom.some(t => t.id === e.id)) {
             custom.push({ id: e.id, s: e.section || SECTIONS[0].id, t: e.title, chips: [["gray", "added by me"]] });
           }
           if (e.type === "done") { done.add(e.id); delete cut[e.id]; }
           if (e.type === "cut") { cut[e.id] = { note: e.note, ts: e.ts }; done.delete(e.id); }
+          if (e.type === "split") { split[e.id] = { ts: e.ts }; }
           if (e.type === "restored") { done.delete(e.id); delete cut[e.id]; }
         }
         unsynced = 0; persist(); render();
       } catch { alert("That file doesn't look like a Paper Trail ledger."); }
     };
     r.readAsText(file);
+  }
+
+  /* ---------- completion feedback ---------- */
+  const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* progress must move the moment the box is ticked, not after the card leaves */
+  function previewProgress(pendingDone) {
+    const total = allTasks().filter(t => !split[t.id]).length;
+    const d = allTasks().filter(t => done.has(t.id)).length + pendingDone;
+    const c = allTasks().filter(t => cut[t.id]).length;
+    const pct = total ? Math.round(((d + c) / total) * 100) : 0;
+    const bar = document.getElementById("bar");
+    bar.style.width = pct + "%";
+    document.getElementById("bar-label").textContent =
+      `${total - d - c} open · ${d} done · ${c} cut · ${pct}%`;
+    const track = bar.parentElement;
+    track.classList.remove("pulse"); void track.offsetWidth;
+    track.classList.add("pulse");
+  }
+
+  function celebrate(el) {
+    if (REDUCED_MOTION) return;
+    const r = el.getBoundingClientRect();
+    const burst = document.createElement("div");
+    burst.className = "burst";
+    burst.style.left = (r.left + r.width / 2) + "px";
+    burst.style.top = (r.top + r.height / 2) + "px";
+    const jackpot = Math.random() < 0.15;   // variable-ratio schedule: occasional bigger payoff
+    const n = jackpot ? 16 : 7 + Math.floor(Math.random() * 4);
+    const colors = ["var(--red)", "var(--navy)", "var(--gold)"];
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement("i");
+      const ang = Math.random() * 2 * Math.PI;
+      const dist = (jackpot ? 46 : 30) + Math.random() * 26;
+      p.style.setProperty("--dx", Math.cos(ang) * dist + "px");
+      p.style.setProperty("--dy", (Math.sin(ang) * dist - 14) + "px");
+      p.style.setProperty("--rot", (Math.random() * 240 - 120) + "deg");
+      p.style.setProperty("--dur", (0.5 + Math.random() * 0.35) + "s");
+      p.style.background = colors[i % 3];
+      burst.appendChild(p);
+    }
+    document.body.appendChild(burst);
+    setTimeout(() => burst.remove(), 1000);
   }
 
   /* ---------- rendering ---------- */
@@ -579,8 +692,49 @@ function init(DATA) {
     li.querySelector(".box").addEventListener("change", (e) => {
       if (!e.target.checked) return;
       li.classList.add("checked");
+      celebrate(e.target);
+      previewProgress(1);
       setTimeout(() => li.classList.add("melting"), 650);
       setTimeout(() => { done.add(t.id); logEvent("done", t.id); render(); }, 1750);
+    });
+
+    const titleEl = li.querySelector(".title");
+    titleEl.title = "Click to split into two to-dos";
+    titleEl.addEventListener("click", () => {
+      if (li.classList.contains("checked")) return;
+      if (li.querySelector(".splitform") || li.querySelector(".cutform")) return;
+      const form = document.createElement("div");
+      form.className = "splitform";
+      form.innerHTML = `
+        <input type="text" class="half">
+        <input type="text" class="half" placeholder="…and the second to-do">
+        <div class="hint">Splits this into two to-dos — the split itself goes in the ledger.</div>
+        <div class="row">
+          <button class="cancel">Cancel</button>
+          <button class="confirm">Split in two</button>
+        </div>`;
+      const [h1, h2] = form.querySelectorAll(".half");
+      h1.value = t.t;
+      li.appendChild(form);
+      h2.focus();
+      form.querySelector(".cancel").onclick = () => form.remove();
+      form.querySelector(".confirm").onclick = () => {
+        const a = h1.value.trim(), b = h2.value.trim();
+        if (!a || !b) { (!a ? h1 : h2).placeholder = "Both halves need a title."; (!a ? h1 : h2).focus(); return; }
+        const base = "c-" + Date.now();
+        const mk = (sfx, txt) => ({ id: base + sfx, s: t.s, t: txt, d: t.d, chips: t.chips, re: t.re });
+        const ta = mk("-a", a), tb = mk("-b", b);
+        custom.push(ta, tb);
+        split[t.id] = { ts: new Date().toISOString(), into: [ta.id, tb.id] };
+        logEvent("split", t.id, `→ “${a}” + “${b}”`);
+        logEvent("added", ta.id, "from split");
+        logEvent("added", tb.id, "from split");
+        render();
+        for (const id of [ta.id, tb.id]) {
+          const el = $sections.querySelector(`li[data-id="${id}"]`);
+          if (el) el.classList.add("newborn");
+        }
+      };
     });
 
     li.querySelector(".cutbtn").addEventListener("click", () => {
@@ -616,14 +770,17 @@ function init(DATA) {
   function render() {
     $sections.innerHTML = "";
     for (const sec of SECTIONS) {
-      const items = allTasks().filter(t => t.s === sec.id && !done.has(t.id) && !cut[t.id]);
+      const items = allTasks().filter(t => t.s === sec.id && !done.has(t.id) && !cut[t.id] && !split[t.id]);
       const el = document.createElement("div");
       el.className = "section";
       el.innerHTML = `<h2>${sec.name} <span class="count">· ${items.length}</span></h2>`;
+      const clip = document.createElement("div");
+      clip.className = "tasks-clip";
       const ul = document.createElement("ul");
       ul.className = "tasks";
       for (const t of items) ul.appendChild(taskEl(t));
-      el.appendChild(ul);
+      clip.appendChild(ul);
+      el.appendChild(clip);
       if (items.length === 0) el.classList.add("empty-hidden");
       $sections.appendChild(el);
     }
@@ -670,7 +827,7 @@ function init(DATA) {
   }
 
   function renderProgress() {
-    const total = allTasks().length;
+    const total = allTasks().filter(t => !split[t.id]).length;
     const d = allTasks().filter(t => done.has(t.id)).length;
     const c = allTasks().filter(t => cut[t.id]).length;
     const pct = total ? Math.round(((d + c) / total) * 100) : 0;
