@@ -156,12 +156,21 @@
   .section > h2 .count { color: var(--red); font-weight: 700; letter-spacing: .04em; }
   .section.empty-hidden { display: none; }
 
-  /* hover a section to expand it; its siblings tuck away */
+  /* the ledger margin rule: inside the line a section opens; leave it and everything closes */
+  #sections { position: relative; }
   .tasks-clip { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .35s ease .08s, opacity .35s ease .08s; }
   .tasks-clip > ul { min-height: 0; overflow: hidden; }
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    #sections:hover .section:not(:hover):not(:focus-within) .tasks-clip { grid-template-rows: 0fr; opacity: .25; }
-    #sections:hover .section:hover > h2 { color: var(--ink); }
+  @media (hover: hover) {
+    #sections { padding-left: 30px; }
+    #sections::before {
+      content: ""; position: absolute; left: 0; top: 8px; bottom: 2px;
+      border-left: 1px solid color-mix(in srgb, var(--red) 55%, transparent);
+    }
+    #sections .section { margin-left: -30px; padding-left: 30px; }
+    .tasks-clip { grid-template-rows: 0fr; opacity: .25; }
+    .section:hover .tasks-clip,
+    .section:focus-within .tasks-clip { grid-template-rows: 1fr; opacity: 1; }
+    .section:hover > h2 { color: var(--ink); }
   }
 
   ul.tasks { list-style: none; }
