@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meltaway</title>
+<title>Paper Trail</title>
 <style>
   :root {
     --bg: #f7f6f3;
@@ -225,7 +225,7 @@
 <body>
 <div class="wrap">
   <header>
-    <h1 id="app-title">Meltaway</h1>
+    <h1 id="app-title">Paper Trail</h1>
     <div class="sub" id="app-subtitle"></div>
     <div class="toolbar">
       <button class="pill" id="ledger-pill" title="Ledger file sync"><span class="dot"></span><span id="ledger-label">Ledger: not connected</span></button>
@@ -259,7 +259,7 @@
     <ul class="log-list" id="cut-list"></ul>
   </details>
 
-  <div class="footer-note">meltaway · every check-off and cut is timestamped in the ledger</div>
+  <div class="footer-note">paper trail · every check-off and cut is timestamped in the ledger</div>
 </div>
 
 <script>
@@ -275,25 +275,26 @@ function loadScript(src) {
 (async function boot() {
   try { await loadScript("data/tasks.js"); }
   catch { await loadScript("sample-data/tasks.sample.js"); }
-  if (!window.MELTAWAY) {
+  if (!window.PAPERTRAIL) {
     document.getElementById("app-subtitle").textContent =
       "No task data found. Copy sample-data/tasks.sample.js to data/tasks.js and edit it.";
     return;
   }
-  init(window.MELTAWAY);
+  init(window.PAPERTRAIL);
 })();
 
 function init(DATA) {
-  const NS = "meltaway::" + (DATA.storageKey || "default") + "::";
+  const NS = "papertrail::" + (DATA.storageKey || "default") + "::";
+  const OLD_NS = "meltaway::" + (DATA.storageKey || "default") + "::";  // pre-rename state
   const SECTIONS = DATA.sections;
   const DEFAULT_TASKS = DATA.tasks;
 
-  document.title = DATA.title || "Meltaway";
-  document.getElementById("app-title").textContent = DATA.title || "Meltaway";
+  document.title = DATA.title || "Paper Trail";
+  document.getElementById("app-title").textContent = DATA.title || "Paper Trail";
   document.getElementById("app-subtitle").textContent = DATA.subtitle || "";
 
   /* ---------- persistence ---------- */
-  const load = (k, fb) => { try { return JSON.parse(localStorage.getItem(NS + k)) ?? fb; } catch { return fb; } };
+  const load = (k, fb) => { try { return JSON.parse(localStorage.getItem(NS + k) ?? localStorage.getItem(OLD_NS + k)) ?? fb; } catch { return fb; } };
   const save = (k, v) => localStorage.setItem(NS + k, JSON.stringify(v));
 
   let done = new Set(load("done", []));
@@ -349,9 +350,9 @@ function init(DATA) {
 
   function ledgerObj() {
     return {
-      app: "meltaway",
+      app: "papertrail",
       version: 1,
-      title: DATA.title || "Meltaway",
+      title: DATA.title || "Paper Trail",
       exportedAt: new Date().toISOString(),
       state: {
         open: allTasks().filter(t => !done.has(t.id) && !cut[t.id]).map(t => ({ id: t.id, title: t.t, section: secName(t.s), re: t.re || null })),
@@ -370,7 +371,7 @@ function init(DATA) {
   const idb = {
     open() {
       return new Promise((res, rej) => {
-        const r = indexedDB.open("meltaway-fs", 1);
+        const r = indexedDB.open("papertrail-fs", 1);
         r.onupgradeneeded = () => r.result.createObjectStore("handles");
         r.onsuccess = () => res(r.result);
         r.onerror = () => rej(r.error);
@@ -460,7 +461,7 @@ function init(DATA) {
           if (e.type === "restored") { done.delete(e.id); delete cut[e.id]; }
         }
         unsynced = 0; persist(); render();
-      } catch { alert("That file doesn't look like a meltaway ledger."); }
+      } catch { alert("That file doesn't look like a Paper Trail ledger."); }
     };
     r.readAsText(file);
   }

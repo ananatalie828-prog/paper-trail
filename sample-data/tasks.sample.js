@@ -1,7 +1,7 @@
 /* Sample task data. Copy this file to data/tasks.js and make it yours —
    data/ is gitignored, so your real list never leaves your machine. */
-window.MELTAWAY = {
-  title: "Meltaway",
+window.PAPERTRAIL = {
+  title: "Paper Trail",
   subtitle: "A local-first to-do dashboard where finished tasks melt away",
   storageKey: "sample",
 

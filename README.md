@@ -1,15 +1,17 @@
-# meltaway 🫠
+# paper trail 🧾
 
-A local-first to-do dashboard where finished tasks **melt away** — and every
-check-off or cut is recorded in a timestamped JSON ledger, so at the end of a
-project you can reconstruct exactly what you delivered, what you consciously
-cut, and why.
+A local-first to-do dashboard that keeps a record of what *happened* to every
+task — not just what's left. Finished tasks melt off the list; removing a task
+requires a written reason; and every action lands in a timestamped, replayable
+JSON ledger. At the end of a project, your summary writes itself from
+evidence instead of memory.
 
 No build step, no server, no accounts. One HTML file.
 
 ## Why
 
-Most to-do apps track what's left. Meltaway also tracks what *happened*:
+Most to-do apps only track the present. Paper Trail treats history as the
+product:
 
 - **Complete** a task → strikethrough sweeps across, the card melts off the list.
 - **Cut** a task → requires a note ("traded against X", "handed to teammate",
