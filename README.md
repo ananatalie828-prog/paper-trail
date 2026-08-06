@@ -18,9 +18,16 @@ product:
   "no longer relevant"). Cuts are first-class citizens, not silent deletions —
   when you write your end-of-project summary, a conscious cut with a reason
   reads very differently from a miss.
+- **Split** a task — click its title to divide it into two to-dos; the
+  ledger records the split and both halves inherit the original's tags.
 - Everything lands in an **append-only event ledger** (`done`, `cut`,
-  `restored`, `added`), each event timestamped and tagged with the task's
-  section and category.
+  `restored`, `added`, `split`), each event timestamped and tagged with the
+  task's section and category.
+- **Export report** compiles the ledger into a print-ready close-out
+  document — executive summary, delivery by work area (grouped by `re:`
+  tag), conscious cuts with their recorded rationale, and added scope —
+  styled for a boss or founder audience. Save it as a PDF from the print
+  dialog.
 
 ## Quick start
 

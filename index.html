@@ -169,7 +169,8 @@
     #sections .section { margin-left: -30px; padding-left: 30px; }
     .tasks-clip { grid-template-rows: 0fr; opacity: .25; }
     .section:hover .tasks-clip,
-    .section:focus-within .tasks-clip { grid-template-rows: 1fr; opacity: 1; }
+    .section:has(.cutform, .splitform) .tasks-clip,
+    .section:has(:focus-visible) .tasks-clip { grid-template-rows: 1fr; opacity: 1; }
     .section:hover > h2 { color: var(--ink); }
   }
 
@@ -197,28 +198,19 @@
     from { opacity: 0; transform: translateY(-7px) scale(.97); }
   }
 
-  /* the suit-button checkbox: fasten it to finish */
+  /* a paper-form tick box */
   .box {
     appearance: none; -webkit-appearance: none;
-    width: 22px; height: 22px; margin-top: 1px;
-    border: 2px solid var(--navy);
-    border-radius: 50%; cursor: pointer; position: relative;
+    width: 21px; height: 21px; margin-top: 1px;
+    border: 1.5px solid var(--rule);
+    border-radius: 5px; cursor: pointer; position: relative;
     background: transparent; flex-shrink: 0;
     transition: background .15s, border-color .15s;
   }
-  .box::before {
-    content: ""; position: absolute; left: 5.5px; top: 5.5px;
-    width: 2.5px; height: 2.5px; border-radius: 50%;
-    background: var(--navy);
-    box-shadow: 4.5px 0 0 var(--navy), 0 4.5px 0 var(--navy), 4.5px 4.5px 0 var(--navy);
-    transition: opacity .15s;
-  }
   .box:hover { border-color: var(--red); }
-  .box:hover::before { background: var(--red); box-shadow: 4.5px 0 0 var(--red), 0 4.5px 0 var(--red), 4.5px 4.5px 0 var(--red); }
   .box:checked { background: var(--red); border-color: var(--red); animation: pop .3s cubic-bezier(.3, 1.6, .4, 1); }
-  .box:checked::before { opacity: 0; }
   .box:checked::after {
-    content: ""; position: absolute; left: 6px; top: 2.5px;
+    content: ""; position: absolute; left: 6px; top: 2px;
     width: 5px; height: 10px;
     border: solid var(--card); border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg);
@@ -393,7 +385,7 @@
     <div class="sub" id="app-subtitle"></div>
     <div class="toolbar">
       <button class="pill" id="ledger-pill" title="Ledger file sync"><span class="dot"></span><span id="ledger-label">Ledger: not connected</span></button>
-      <button class="pill" id="export-btn">Export ledger</button>
+      <button class="pill" id="export-btn" title="Build a print-ready delivery summary — save as PDF from the print dialog">Export report</button>
       <button class="pill" id="import-btn">Import ledger</button>
       <input type="file" id="import-input" accept="application/json" hidden>
     </div>
@@ -608,6 +600,119 @@ function init(DATA) {
     a.click();
     URL.revokeObjectURL(a.href);
     unsynced = 0; persist(); renderLedgerPill();
+  }
+
+  /* ---------- close-out report: the ledger compiled for the founders ---------- */
+  function exportReport() {
+    const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
+    const day = ts => ts ? new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "";
+
+    const doneAt = {};
+    for (const e of ledger) if (e.type === "done" && e.ts) doneAt[e.id] = e.ts;
+    const tasks = allTasks().filter(t => !split[t.id]);
+    const delivered = tasks.filter(t => done.has(t.id));
+    const cuts = tasks.filter(t => cut[t.id]);
+    const open = tasks.filter(t => !done.has(t.id) && !cut[t.id]);
+    const addedScope = ledger.filter(e => e.type === "added" && !/from split|migrated/.test(e.note || ""));
+    const firstTs = (ledger.find(e => e.ts) || {}).ts;
+    const pct = tasks.length ? Math.round((delivered.length + cuts.length) / tasks.length * 100) : 0;
+    const today = new Date().toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+
+    const areas = {};
+    for (const t of tasks) (areas[t.re || "General"] = areas[t.re || "General"] || []).push(t);
+    const areaNames = Object.keys(areas).sort();
+
+    const line = (glyph, cls, text, extra) =>
+      `<div class="li ${cls}"><span class="g">${glyph}</span>${esc(text)}${extra || ""}</div>`;
+
+    const areaBlocks = areaNames.map(name => {
+      const d = areas[name].filter(t => done.has(t.id));
+      const c = areas[name].filter(t => cut[t.id]);
+      const o = areas[name].filter(t => !done.has(t.id) && !cut[t.id]);
+      return `<div class="area">
+        <h3>${esc(name)} <span class="tally">${d.length}/${areas[name].length} delivered</span></h3>
+        ${d.map(t => line("✓", "d", t.t, ` <span class="when">${day(doneAt[t.id])}</span>`)).join("")}
+        ${c.map(t => line("—", "c", t.t, ` <span class="why">descoped: ${esc(cut[t.id].note)}</span>`)).join("")}
+        ${o.map(t => line("○", "o", t.t)).join("")}
+      </div>`;
+    }).join("");
+
+    const addedBlock = addedScope.map(e => {
+      const t = findTask(e.id);
+      const st = done.has(e.id) ? ["✓", "d"] : cut[e.id] ? ["—", "c"] : ["○", "o"];
+      return line(st[0], st[1], t ? t.t : e.title, ` <span class="when">added ${day(e.ts)}</span>`);
+    }).join("");
+
+    const html = `<!doctype html><html><head><meta charset="utf-8">
+<title>${esc(DATA.title)} — close-out report</title>
+<style>
+  @page { size: letter; margin: 15mm 16mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font: 10pt/1.5 "Avenir Next", Avenir, Helvetica, Arial, sans-serif; color: #23272E;
+         max-width: 760px; margin: 0 auto; padding: 36px 24px; background: #fff; }
+  .top { display: flex; justify-content: space-between; border-bottom: 2.5px solid #1F3A5F;
+         padding-bottom: 7px; font-size: 7.5pt; font-weight: 600; letter-spacing: .18em;
+         text-transform: uppercase; color: #1F3A5F; }
+  h1 { font-size: 19pt; font-weight: 700; letter-spacing: -.01em; color: #1F3A5F; margin: 16px 0 3px; }
+  .meta { font-size: 9pt; color: #5C6470; }
+  .kpis { display: flex; gap: 30px; margin: 16px 0 2px; }
+  .kpi .n { font-size: 21pt; font-weight: 700; line-height: 1.15; color: #1F3A5F; }
+  .kpi.red .n { color: #A8232E; }
+  .kpi .l { font-size: 7.5pt; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: #5C6470; }
+  h2 { font-size: 9.5pt; text-transform: uppercase; letter-spacing: .14em; color: #1F3A5F;
+       border-bottom: 1px solid #C9CED6; padding-bottom: 4px; margin: 18px 0 8px; }
+  ul.exec { margin: 0 0 4px 16px; }
+  ul.exec li { margin-bottom: 3px; }
+  .area { break-inside: avoid; margin-bottom: 11px; }
+  .area h3 { font-size: 10pt; font-weight: 700; margin-bottom: 3px; }
+  .area .tally { font-size: 8.5pt; font-weight: 500; color: #5C6470; }
+  .li { padding-left: 16px; text-indent: -16px; margin-bottom: 1.5px; }
+  .li .g { display: inline-block; width: 16px; text-indent: 0; }
+  .li.d .g { color: #1F3A5F; font-weight: 700; }
+  .li.c { color: #5C6470; }
+  .li.c .g { color: #A8232E; }
+  .li.o .g { color: #97A0AC; }
+  .when { color: #97A0AC; font-size: 8.5pt; }
+  .why { color: #5C6470; font-style: italic; }
+  .foot { display: flex; justify-content: space-between; margin-top: 22px;
+          border-top: 1px solid #C9CED6; padding-top: 6px; font-size: 8pt; color: #5C6470; }
+  .printbtn { position: fixed; right: 18px; top: 14px; background: #1F3A5F; color: #fff; border: 0;
+              border-radius: 4px; padding: 9px 16px; font: 600 10pt "Avenir Next", Avenir, sans-serif; cursor: pointer; }
+  @media print { .printbtn { display: none; } body { padding: 0; } }
+</style></head><body>
+  <div class="top"><span>Engagement close-out · prepared for the founders</span><span>${esc(today)}</span></div>
+  <h1>Delivery summary &amp; handoff record</h1>
+  <div class="meta">${esc(DATA.title)}${firstTs ? ` · period ${day(firstTs)} – ${day(new Date().toISOString())}` : ""} · compiled from the append-only task ledger (${ledger.length} recorded events)</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n">${delivered.length}</div><div class="l">Delivered</div></div>
+    <div class="kpi"><div class="n">${pct}%</div><div class="l">Plan resolved</div></div>
+    <div class="kpi red"><div class="n">${addedScope.length}</div><div class="l">Added scope</div></div>
+    <div class="kpi"><div class="n">${cuts.length}</div><div class="l">Conscious cuts</div></div>
+  </div>
+
+  <h2>Executive summary</h2>
+  <ul class="exec">
+    <li><b>${delivered.length} of ${tasks.length}</b> scoped items delivered across <b>${areaNames.length} work areas</b>, mapped to the role's stated expectations below.</li>
+    <li><b>${addedScope.length} items of scope absorbed beyond the original plan</b> — work taken on that was never scoped.</li>
+    <li><b>${cuts.length} items consciously descoped</b>, each with its rationale on the record — deliberate tradeoffs, not misses.</li>
+    <li><b>${open.length} items remain open</b> and are flagged (○) below as the handoff list.</li>
+  </ul>
+
+  <h2>Delivery by work area</h2>
+  ${areaBlocks}
+
+  ${addedScope.length ? `<h2>Added scope — beyond the original plan</h2>${addedBlock}` : ""}
+
+  <div class="foot"><span>Confidential — internal</span><span>Generated ${esc(today)} from ledger evidence · paper trail</span></div>
+  <button class="printbtn" onclick="window.print()">Save as PDF</button>
+  <script>setTimeout(() => window.print(), 600)<\/script>
+</body></html>`;
+
+    const w = window.open("", "_blank");
+    if (!w) { alert("Allow pop-ups for this page to export the report."); return; }
+    w.document.write(html);
+    w.document.close();
   }
 
   function importLedger(file) {
@@ -882,7 +987,7 @@ function init(DATA) {
 
   /* ---------- toolbar wiring ---------- */
   document.getElementById("ledger-pill").onclick = connectLedgerFile;
-  document.getElementById("export-btn").onclick = exportLedger;
+  document.getElementById("export-btn").onclick = exportReport;
   document.getElementById("import-btn").onclick = () => document.getElementById("import-input").click();
   document.getElementById("import-input").addEventListener("change", e => {
     if (e.target.files[0]) importLedger(e.target.files[0]);
