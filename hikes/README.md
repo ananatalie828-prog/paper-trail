@@ -8,7 +8,7 @@ Trip materials for three hiking days in Glacier: a one-page map sheet per day
 | File | What it is |
 |---|---|
 | `pdf/day1-avalanche-lake.pdf` | Day 1 sheet — Avalanche Lake |
-| `pdf/day2-logan-pass.pdf` | Day 2 sheet — summit group **or** lakes group |
+| `pdf/day2-logan-pass.pdf` | Day 2 sheet — Highline **or** Hidden Lake |
 | `pdf/day3-grinnell.pdf` | Day 3 sheet — Grinnell Glacier & Grinnell Lake |
 | `pdf/day4-trail-rules.pdf` | On the trail — food, trash, bears, bathroom |
 | `slides/glacier-hikes.pptx` | 6-slide deck covering all three days |
@@ -49,9 +49,10 @@ AllTrails and NPS listings before anyone prints these and heads out.
 
 Same goes for anything operational, which changes season to season:
 
-- **the last westbound shuttle from The Loop.** The day 2 sheet has a blank
-  ruled line for it rather than a guessed time — fill it in before printing.
-  If the summit group misses that bus there is no other way back to the car.
+- **the 7:30 pm last bus out of The Loop** printed on the day 2 sheet. That
+  time came from the trip planner, not from a source this environment could
+  reach — re-check it against the season's timetable, because if the summit
+  group misses that bus there is no other way back to the car.
 - current **shuttle routes and departure times** generally
 - **boat schedules** at Many Glacier (day 3)
 - **trail status** — snow keeps the Highline and the Grinnell traverse closed

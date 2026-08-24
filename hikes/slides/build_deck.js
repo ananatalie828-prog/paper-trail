@@ -56,7 +56,7 @@ const DAYS = [
   },
   {
     n: "2",
-    title: "Summit Group & Lakes Group",
+    title: "Highline & Hidden Lake",
     date: "WED · AUG 26",
     where: "Logan Pass",
     kicker: "TWO GROUPS · BOTH START AT LOGAN PASS",
@@ -87,7 +87,7 @@ const DAYS = [
       ["P", MOSS, "Park at Apgar", ". The car stays there all day."],
       ["B", BLUE, "Bus from Apgar", ", transferring at Avalanche Creek."],
       ["B", BLUE, "Shuttle to Logan Pass", " — both groups start here and split."],
-      ["B", BLUE, "Shuttle back", " — summit at The Loop, lakes at Logan Pass."],
+      ["B", BLUE, "Shuttle back", " — summit at The Loop (last bus 7:30 pm), lakes at Logan Pass."],
     ],
   },
   {
@@ -224,7 +224,7 @@ function overviewSlide() {
       body: "Stop at the foot of the lake, or keep going along the shore to the head for another 0.65 mi each way.",
     },
     {
-      n: "2", name: "Summit & Lakes groups", sub: "Wednesday 26 · Logan Pass",
+      n: "2", name: "Highline & Hidden Lake", sub: "Wednesday 26 · Logan Pass",
       rows: [["11.8 mi", "summit group"], ["2.7 mi", "lakes group"]],
       move: "Bus and shuttle, no car.", moveColor: BLUE,
       body: "The summit group finishes at The Loop rather than back at Logan Pass, so the shuttle has to line up.",
@@ -407,12 +407,12 @@ function logisticsSlide() {
       note: "The car sits at the Avalanche Creek lot all day. Nothing to catch and nothing to book.",
     },
     {
-      n: "2", name: "Summit & lakes groups",
+      n: "2", name: "Highline & Hidden Lake",
       chain: [
         ["Park at Apgar", MOSS], ["Bus", BLUE], ["Shuttle to Logan Pass", BLUE],
         ["Hike", CORAL], ["Shuttle back", BLUE],
       ],
-      note: "Transfer at Avalanche both directions. We should be long gone by then, but the summit group has to be down at The Loop before the last westbound bus.",
+      note: "Transfer at Avalanche both directions. We should be long gone by then, but the last bus out of The Loop is 7:30 pm — the summit group has to be down before it goes.",
     },
     {
       n: "3", name: "Grinnell Glacier",
