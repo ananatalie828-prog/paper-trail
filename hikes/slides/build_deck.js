@@ -85,9 +85,9 @@ const DAYS = [
     ],
     legs: [
       ["P", MOSS, "Park at Apgar", ". The car stays there all day."],
-      ["B", BLUE, "Bus from Apgar", ", transferring at Avalanche Creek."],
-      ["B", BLUE, "Shuttle to Logan Pass", " — both groups start here and split."],
-      ["B", BLUE, "Shuttle back", " — summit at The Loop (last bus 7:30 pm), lakes at Logan Pass."],
+      ["B", BLUE, "Express shuttle to Logan Pass", " — direct, no stops on the way up."],
+      ["B", BLUE, "Both groups get off there", " and split at the visitor center."],
+      ["B", BLUE, "Westbound shuttle back", " — summit at The Loop (last bus 7:30 pm), lakes at Logan Pass."],
     ],
   },
   {
@@ -409,10 +409,10 @@ function logisticsSlide() {
     {
       n: "2", name: "Highline & Hidden Lake",
       chain: [
-        ["Park at Apgar", MOSS], ["Bus", BLUE], ["Shuttle to Logan Pass", BLUE],
+        ["Park at Apgar", MOSS], ["Express shuttle to Logan Pass", BLUE],
         ["Hike", CORAL], ["Shuttle back", BLUE],
       ],
-      note: "Transfer at Avalanche both directions. We should be long gone by then, but the last bus out of The Loop is 7:30 pm — the summit group has to be down before it goes.",
+      note: "The Apgar shuttle runs express to Logan Pass, no stops on the way up. We should be long gone by then, but the last bus out of The Loop is 7:30 pm and the summit group has to be down before it goes.",
     },
     {
       n: "3", name: "Grinnell Glacier",
