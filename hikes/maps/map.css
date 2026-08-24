@@ -315,20 +315,38 @@ html, body { width: 11in; height: 8.5in; overflow: hidden; }
 .check { margin: 0; padding: 0; list-style: none; }
 .check li {
   position: relative;
-  padding-left: 17px;
-  margin-bottom: 5.5px;
-  font-size: 8.5pt;
-  line-height: 1.3;
+  padding-left: 19px;
+  margin-bottom: 9px;
+  font-size: 9pt;
+  line-height: 1.34;
   color: var(--ink-soft);
 }
 .check li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 1px;
-  width: 9px;
-  height: 9px;
+  top: 1.5px;
+  width: 10px;
+  height: 10px;
   border: 1.5px solid var(--ink-faint);
   border-radius: 1.5px;
 }
 .check li b { color: var(--ink); }
+
+/* already packed — box filled with a drawn tick, so it survives printing
+   and doesn't depend on a checkmark glyph being in the font */
+.check li.done::before {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.check li.done::after {
+  content: "";
+  position: absolute;
+  left: 2.4px;
+  top: 4px;
+  width: 5px;
+  height: 2.4px;
+  border-left: 1.7px solid var(--paper);
+  border-bottom: 1.7px solid var(--paper);
+  transform: rotate(-45deg);
+}
