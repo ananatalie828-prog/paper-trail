@@ -1,0 +1,153 @@
+/* Phone sheets — same content as the Letter sheets, re-flowed into a single
+   narrow column you scroll instead of pinch-and-pan.
+   Loaded after map.css, so everything here is an override.
+
+   The page is 4in wide. A phone PDF viewer fits that to the screen width, so
+   type set at N pt here lands at roughly N * 1.35 CSS px on a 390px-wide
+   screen — which is why the body copy is much larger relative to the page than
+   it is on the Letter version. */
+
+html, body {
+  width: auto;
+  height: auto;
+  overflow: visible;
+  background: var(--paper);
+}
+
+.psheet {
+  width: 4in;
+  background: var(--paper);
+  padding: 0 0 0.3in;
+  overflow: hidden;
+}
+
+/* ---------- header ---------- */
+
+.phd {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.22in 0.28in 0.24in;
+  margin-bottom: 0.22in;
+}
+.phd .chips { display: flex; gap: 8px; align-items: center; margin-bottom: 9px; }
+.phd .day {
+  font-size: 8pt; font-weight: bold; letter-spacing: 0.13em;
+  padding: 3px 8px; border: 1.5px solid rgba(244,241,234,.55); border-radius: 2px;
+}
+.phd .when {
+  font-size: 8pt; font-weight: bold; letter-spacing: 0.11em;
+  padding: 4px 9px; border-radius: 2px; background: var(--trail); color: #fff;
+}
+.phd h1 {
+  margin: 0; font-size: 21pt; font-weight: bold;
+  letter-spacing: -0.015em; line-height: 1.08;
+}
+.phd .loc {
+  margin-top: 7px; font-size: 8pt; letter-spacing: 0.1em;
+  color: rgba(244,241,234,.7);
+}
+
+/* ---------- body ---------- */
+
+.pbody { padding: 0 0.28in; }
+
+.pbody .blk { margin-bottom: 0.2in; }
+.pbody .blk > h2 { font-size: 9pt; letter-spacing: 0.15em; margin-bottom: 9px; }
+
+.pbody .opt { border-left-width: 5px; padding-left: 11px; margin-bottom: 13px; }
+.pbody .opt .name { font-size: 14pt; }
+.pbody .opt .name small { font-size: 8.5pt; margin-bottom: 3px; }
+.pbody .stats { gap: 0.2in; margin-top: 7px; }
+.pbody .stats .v { font-size: 15pt; }
+.pbody .stats .k { font-size: 7.5pt; }
+.pbody .opt .note { font-size: 10.5pt; line-height: 1.4; margin-top: 8px; }
+
+.pbody .leg { font-size: 10.5pt; line-height: 1.4; padding: 8px 0; gap: 10px; }
+.pbody .leg .ic { flex-basis: 18px; height: 18px; font-size: 8.5pt; }
+
+.pbody .callout {
+  margin-top: 0.16in; font-size: 9.5pt; line-height: 1.45;
+  padding: 10px 12px; border-left-width: 4px;
+}
+
+.pbody .hint { font-size: 9.5pt; margin: -2px 0 10px; }
+
+.pbody .check li { font-size: 10.5pt; padding-left: 22px; margin-bottom: 10px; }
+.pbody .check li::before { width: 12px; height: 12px; top: 2px; }
+.pbody .check li.done::after {
+  left: 3px; top: 5px; width: 6px; height: 3px; border-width: 2px;
+}
+
+/* the trail-practices panels stack instead of sitting in two columns */
+.pbody .rules { display: block; padding: 0; overflow: visible; }
+.pbody .panel { margin-bottom: 0.2in; }
+.pbody .panel > h3 { font-size: 13pt; }
+.pbody .panel > h3 .dot { flex-basis: 18px; height: 18px; font-size: 9pt; }
+.pbody .panel .lede { font-size: 10.5pt; line-height: 1.4; }
+.pbody .panel li { font-size: 10.5pt; line-height: 1.4; margin-bottom: 6px; padding-left: 13px; }
+.pbody .panel li::before { top: 6px; width: 5px; height: 5px; }
+.pbody .panel .sub { font-size: 8.5pt; }
+
+/* ---------- map ---------- */
+
+.pmap {
+  width: 100%;
+  margin: 0 0 0.22in;
+  overflow: hidden;
+}
+.pmap svg { display: block; width: 100%; height: auto; }
+
+/* At this size the map can only carry the route and the numbered stops.
+   Every label comes off and reappears in the list underneath, set in type you
+   can actually read instead of the 5pt it would shrink to here. */
+.pmap text { display: none; }
+.pmap .t-mark { display: block; font-size: 20px !important; }
+
+/* map furniture tagged in the source: peaks, legend, scale bar, north arrow */
+.pmap [data-ph="drop"] { display: none; }
+/* the START/END leader arrows lose their point once the callouts are hidden */
+.pmap path[marker-end] { display: none; }
+
+/* fatten the strokes so the route still reads once the sheet is scaled down */
+.pmap circle { r: 18px; }
+.pmap path[stroke="#E2574C"] { stroke-width: 9; }
+.pmap path[stroke="#2E7D8A"] { stroke-width: 9; }
+.pmap path[stroke="#3D6EA5"] { stroke-width: 6; }
+.pmap path[stroke="#A8A399"] { stroke-width: 11; }
+.pmap path[stroke="#8FB4C9"] { stroke-width: 4; }
+.pmap path[stroke="#7C8F6B"], .pmap ellipse[stroke="#7C8F6B"] { stroke-width: 6; }
+.pmap ellipse[stroke="#8FB4C9"] { stroke-width: 2.5; }
+
+@page { size: 4in 10in; margin: 0; }
+
+/* ---------- the stops, lifted off the map ---------- */
+
+.stops { margin: 0 0 0.2in; padding: 0; list-style: none; counter-reset: none; }
+.stops li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 10.5pt;
+  line-height: 1.35;
+  padding: 7px 0;
+  border-bottom: 1px dotted var(--rule);
+}
+.stops li:last-child { border-bottom: 0; }
+.stops .pin {
+  flex: 0 0 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: var(--trail);
+  color: #fff;
+  font-size: 8.5pt;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+}
+.stops .pin.hollow { background: #fff; color: var(--trail-dk); box-shadow: inset 0 0 0 2.5px var(--trail); }
+.stops .pin.ink    { background: var(--ink); }
+.stops .pin.alt    { background: var(--alt); }
+.stops b { color: var(--ink); }
+.stops .det { color: var(--ink-soft); }

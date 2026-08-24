@@ -106,15 +106,15 @@
           fill="none" stroke="#F4F1EA" stroke-width="1.6"
           stroke-dasharray="7 9" stroke-linecap="round"/>
     <text class="t-road" x="72" y="210" transform="rotate(-84 72 210)">Going-to-the-Sun Road</text>
-    <text class="t-small" x="120" y="26">↑ to Logan Pass</text>
-    <text class="t-small" x="124" y="704">↓ to Apgar</text>
+    <text class="t-small" x="120" y="26" data-ph="drop">↑ to Logan Pass</text>
+    <text class="t-small" x="124" y="704" data-ph="drop">↓ to Apgar</text>
 
     <!-- ---- Trail of the Cedars boardwalk loop ---- -->
     <ellipse cx="184" cy="634" rx="66" ry="34"
              fill="none" stroke="#7C8F6B" stroke-width="3.5" stroke-dasharray="5 5"
              stroke-linecap="round"/>
     <text class="t-small" x="184" y="630" text-anchor="middle"
-          style="fill:#5F6E48;font-weight:bold">Trail of the Cedars</text>
+          style="fill:#5F6E48;font-weight:bold" data-stop="2">Trail of the Cedars</text>
     <text class="t-small" x="184" y="645" text-anchor="middle" style="fill:#8C9A7A">0.9 mi boardwalk loop</text>
 
     <!-- ---- MAIN TRAIL: trailhead to foot of lake ---- -->
@@ -151,23 +151,23 @@
     <text class="t-mark" x="700" y="305" text-anchor="middle" fill="#fff" style="font-size:12px;font-weight:bold">5</text>
 
     <!-- ---- waypoint labels ---- -->
-    <text class="t-place" x="132" y="580">Avalanche Creek TH</text>
+    <text class="t-place" x="132" y="580" data-stop="1">Avalanche Creek TH</text>
     <text class="t-small" x="132" y="594">parking · restrooms</text>
 
-    <text class="t-place" x="318" y="536" text-anchor="end">Avalanche Gorge</text>
+    <text class="t-place" x="318" y="536" text-anchor="end" data-stop="3">Avalanche Gorge</text>
     <text class="t-small" x="318" y="550" text-anchor="end">0.5 mi</text>
 
-    <text class="t-place" x="490" y="330" text-anchor="end">Foot of the lake</text>
+    <text class="t-place" x="490" y="330" text-anchor="end" data-stop="4">Foot of the lake</text>
     <text class="t-small" x="490" y="344" text-anchor="end">2.3 mi · where most people stop</text>
 
-    <text class="t-place" x="752" y="374" text-anchor="end">Head of the lake</text>
+    <text class="t-place" x="752" y="374" text-anchor="end" data-stop="5">Head of the lake</text>
     <text class="t-small" x="752" y="388" text-anchor="end">2.95 mi · turnaround</text>
 
-    <text class="t-water" x="586" y="316" text-anchor="middle"
+    <text data-ph="keep" class="t-water" x="586" y="316" text-anchor="middle"
           transform="rotate(-28 586 316)" style="font-size:14px">Avalanche Lake</text>
 
     <!-- ---- peaks ---- -->
-    <g fill="#8C867B">
+    <g fill="#8C867B" data-ph="drop">
       <path d="M 452,232 l 11,-20 l 11,20 z"/>
       <path d="M 596,136 l 12,-21 l 12,21 z"/>
       <path d="M 452,690 l 11,-20 l 11,20 z"/>
@@ -184,14 +184,14 @@
           fill="none" stroke="#E2574C" stroke-width="2.5" marker-end="url(#arrow)"/>
 
     <!-- ---- north arrow ---- -->
-    <g transform="translate(232,150)">
+    <g transform="translate(232,150)" data-ph="drop">
       <path d="M 0,-28 L 9,11 L 0,3 L -9,11 Z" fill="#6B665E"/>
       <text x="0" y="30" text-anchor="middle" class="t-small"
             style="font-weight:bold;letter-spacing:.1em">N</text>
     </g>
 
     <!-- ---- scale bar ---- -->
-    <g transform="translate(548,610)">
+    <g transform="translate(548,610)" data-ph="drop">
       <text x="0" y="-11" class="legend-t" style="letter-spacing:.08em">APPROXIMATE</text>
       <line x1="0" y1="0" x2="150" y2="0" stroke="#6B665E" stroke-width="2.5"/>
       <line x1="0" y1="-5" x2="0" y2="5" stroke="#6B665E" stroke-width="2.5"/>
@@ -202,7 +202,7 @@
       <text x="150" y="20" class="legend-t" text-anchor="middle">1 mi</text>
     </g>
 
-    <text class="legend-t" x="750" y="748" text-anchor="end" style="fill:#B0AAA0">
+    <text class="legend-t" x="750" y="748" text-anchor="end" style="fill:#B0AAA0" data-ph="drop">
       Schematic — not to scale. Not for navigation.</text>
   </svg>
   </div>

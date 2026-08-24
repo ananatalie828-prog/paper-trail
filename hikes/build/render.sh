@@ -58,4 +58,5 @@ PY
   printf '  %-28s -> pdf/%s.pdf  preview/%s.png\n' "$name" "$name" "$name"
 done
 
-echo "done."
+# the phone-shaped versions are generated from these same files
+python3 "$ROOT/hikes/build/phone.py" "$FILTER"

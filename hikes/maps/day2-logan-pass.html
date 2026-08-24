@@ -104,7 +104,7 @@
     <!-- ---- Hidden Lake ---- -->
     <ellipse cx="540" cy="708" rx="56" ry="25" transform="rotate(-10 540 708)"
              fill="#CBDEE9" stroke="#8FB4C9" stroke-width="1.5"/>
-    <text class="t-water" x="540" y="712" text-anchor="middle">Hidden Lake</text>
+    <text data-ph="keep" class="t-water" x="540" y="712" text-anchor="middle">Hidden Lake</text>
 
     <!-- ---- Going-to-the-Sun Road ---- -->
     <!-- lower-left branch, below the hairpin -->
@@ -120,8 +120,8 @@
           fill="none" stroke="#F4F1EA" stroke-width="1.6"
           stroke-dasharray="7 9" stroke-linecap="round"/>
     <text class="t-road" x="300" y="642" transform="rotate(-8 300 642)">Going-to-the-Sun Road</text>
-    <text class="t-small" x="746" y="404" text-anchor="end">to St. Mary →</text>
-    <text class="t-small" x="132" y="726">↙ to Avalanche &amp; Apgar</text>
+    <text class="t-small" x="746" y="404" text-anchor="end" data-ph="drop">to St. Mary →</text>
+    <text class="t-small" x="132" y="726" data-ph="drop">↙ to Avalanche &amp; Apgar</text>
 
     <!-- ---- other trails (dashed, context only) ---- -->
     <g fill="none" stroke="#BDB7AC" stroke-width="2.6" stroke-dasharray="7 6"
@@ -129,8 +129,8 @@
       <path d="M 300,150 C 292,112 288,80 286,48"/>
       <path d="M 300,150 C 336,120 376,96 418,80 C 462,62 510,52 552,48"/>
     </g>
-    <text class="t-small" x="292" y="38" text-anchor="middle" style="fill:#9A948A">to Fifty Mountain</text>
-    <text class="t-small" x="562" y="46" style="fill:#9A948A">Swiftcurrent Pass →<tspan x="562" dy="13">to Many Glacier</tspan></text>
+    <text class="t-small" x="292" y="38" text-anchor="middle" style="fill:#9A948A" data-ph="drop">to Fifty Mountain</text>
+    <text class="t-small" x="562" y="46" style="fill:#9A948A" data-ph="drop">Swiftcurrent Pass →<tspan x="562" dy="13">to Many Glacier</tspan></text>
 
     <!-- ============ OPTION A — Highline Trail ============ -->
     <!-- Logan Pass -> Grinnell Glacier Overlook junction -->
@@ -179,29 +179,29 @@
     <circle cx="598" cy="626" r="12" fill="#2E7D8A"/>
 
     <!-- ---- place labels ---- -->
-    <text class="t-place" x="640" y="508">Logan Pass</text>
+    <text class="t-place" x="640" y="508" data-stop="S">Logan Pass</text>
     <text class="t-small" x="640" y="522">visitor center · 6,646 ft</text>
 
-    <text class="t-place" x="286" y="128" text-anchor="end">Granite Park Chalet</text>
+    <text class="t-place" x="286" y="128" text-anchor="end" data-stop="●">Granite Park Chalet</text>
     <text class="t-small" x="286" y="142" text-anchor="end">7.6 mi · 6,680 ft</text>
 
     <text class="t-small" x="390" y="214" text-anchor="end">Grinnell Glacier</text>
     <text class="t-small" x="390" y="226" text-anchor="end">Overlook jct</text>
 
-    <text class="t-place" x="466" y="88">Grinnell Glacier Overlook</text>
+    <text class="t-place" x="466" y="88" data-stop="○">Grinnell Glacier Overlook</text>
     <text class="t-small" x="466" y="102">spur · +900 ft each way</text>
 
-    <text class="t-place" x="128" y="450" text-anchor="end">The Loop</text>
+    <text class="t-place" x="128" y="450" text-anchor="end" data-stop="E">The Loop</text>
     <text class="t-small" x="128" y="464" text-anchor="end">4,350 ft · shuttle stop</text>
 
-    <text class="t-place" x="620" y="620" style="fill:#1F5A64">Hidden Lake Overlook</text>
+    <text class="t-place" x="620" y="620" style="fill:#1F5A64" data-stop="◆">Hidden Lake Overlook</text>
     <text class="t-small" x="620" y="634">1.4 mi · turnaround</text>
 
     <text class="t-small" x="624" y="690" style="fill:#1F5A64">
       steep drop to the shore,<tspan x="624" dy="12">adds 2.7 mi round trip</tspan></text>
 
     <!-- ---- peaks ---- -->
-    <g fill="#8C867B">
+    <g fill="#8C867B" data-ph="drop">
       <path d="M 562,660 l 11,-20 l 11,20 z"/>
       <path d="M 400,716 l 11,-20 l 11,20 z"/>
       <path d="M 356,262 l 11,-20 l 11,20 z"/>
@@ -222,7 +222,7 @@
           fill="none" stroke="#E2574C" stroke-width="2.2" marker-end="url(#arrowA)"/>
 
     <!-- ---- legend ---- -->
-    <g transform="translate(44,92)">
+    <g transform="translate(44,92)" data-ph="drop">
       <text x="0" y="0" class="legend-t" style="font-weight:bold;letter-spacing:.14em;fill:#9A948A">KEY</text>
       <line x1="0" y1="16" x2="28" y2="16" stroke="#E2574C" stroke-width="5" stroke-linecap="round"/>
       <text x="36" y="20" class="legend-t">Summit group</text>
@@ -236,14 +236,14 @@
     </g>
 
     <!-- ---- north arrow ---- -->
-    <g transform="translate(726,124)">
+    <g transform="translate(726,124)" data-ph="drop">
       <path d="M 0,-28 L 9,11 L 0,3 L -9,11 Z" fill="#6B665E"/>
       <text x="0" y="30" text-anchor="middle" class="t-small"
             style="font-weight:bold;letter-spacing:.1em">N</text>
     </g>
 
     <!-- ---- scale bar ---- -->
-    <g transform="translate(48,232)">
+    <g transform="translate(48,232)" data-ph="drop">
       <text x="0" y="-11" class="legend-t" style="letter-spacing:.08em">APPROXIMATE</text>
       <line x1="0" y1="0" x2="140" y2="0" stroke="#6B665E" stroke-width="2.5"/>
       <line x1="0" y1="-5" x2="0" y2="5" stroke="#6B665E" stroke-width="2.5"/>
@@ -254,7 +254,7 @@
       <text x="140" y="20" class="legend-t" text-anchor="middle">2 mi</text>
     </g>
 
-    <text class="legend-t" x="750" y="748" text-anchor="end" style="fill:#B0AAA0">
+    <text class="legend-t" x="750" y="748" text-anchor="end" style="fill:#B0AAA0" data-ph="drop">
       Schematic — not to scale. Not for navigation.</text>
   </svg>
   </div>

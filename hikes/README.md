@@ -11,14 +11,27 @@ Trip materials for three hiking days in Glacier: a one-page map sheet per day
 | `pdf/day2-logan-pass.pdf` | Day 2 sheet — Highline **or** Hidden Lake |
 | `pdf/day3-grinnell.pdf` | Day 3 sheet — Grinnell Glacier & Grinnell Lake |
 | `pdf/day4-trail-rules.pdf` | On the trail — food, trash, bears, bathroom |
+| `pdf/phone/*.pdf` | The same four sheets, phone-shaped |
 | `slides/glacier-hikes.pptx` | 6-slide deck covering all three days |
 | `maps/*.html` | The sheets themselves — edit these, then re-render |
 | `preview/*.png` | 2x PNG of each sheet, for quick review |
 
-Each PDF is a single US Letter page, landscape. The three day sheets put hike
-stats and the getting-there-and-back plan down the left and a schematic route
-map on the right. The fourth has no map — it is a pack list plus four reference
-panels, meant to be printed once and carried.
+Each PDF in `pdf/` is a single US Letter page, landscape. The three day sheets
+put hike stats and the getting-there-and-back plan down the left and a
+schematic route map on the right. The fourth has no map — it is a pack list
+plus four reference panels, meant to be printed once and carried.
+
+`pdf/phone/` holds the same four sheets 4in wide and as tall as their content,
+for reading on a phone: a viewer fits the width and you scroll instead of
+pinching and panning. They are generated from the Letter files, not
+re-authored, so there is still one place to edit anything.
+
+At a quarter of the width the map cannot carry its labels — they would land
+around 5pt — so on the phone sheets it keeps only the route and the numbered
+pins, and every name and distance moves to a **Stops on the map** list below it
+in readable type. The list is built from the pins themselves, so the two cannot
+drift apart. Save these to the phone before the trip; there is no service in
+the park.
 
 ## The three days
 
@@ -69,8 +82,9 @@ page before the trip, and check the trailhead board on the day.
 ## Rebuilding
 
 ```bash
-./build/render.sh                  # all sheets -> pdf/ + preview/
+./build/render.sh                  # all sheets -> pdf/, pdf/phone/, preview/
 ./build/render.sh day2             # just the matching sheet
+python3 build/phone.py             # phone sheets only
 python3 build/check_overlaps.py    # fails on overlapping, clipped or on-line text
 
 python3 build/crop_maps.py         # preview PNGs -> slides/img/
@@ -102,8 +116,16 @@ node slides/build_deck.js          # -> slides/glacier-hikes.pptx
   a left edge, a right edge or a centre and sit within 10px vertically.
   Everything else has to keep its distance.
 
-`render.sh` drives headless Chromium. It finds the Playwright-managed build
-automatically; otherwise set `CHROME=/path/to/chrome`.
+`render.sh` drives headless Chromium and then calls `phone.py`, which drives
+Playwright. `render.sh` finds the Chromium build automatically; otherwise set
+`CHROME=/path/to/chrome`.
+
+`phone.py` measures rather than guesses: it crops the map's viewBox to what the
+map still draws once the labels are hidden, then sets the page height from the
+rendered content, so a phone sheet can neither float in wasted width nor get
+cut off at the bottom. Elements the phone version drops are tagged
+`data-ph="drop"` in the source; waypoints that feed the stops list are tagged
+`data-stop="<pin>"`.
 
 ### Editing a sheet
 
