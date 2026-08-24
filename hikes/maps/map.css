@@ -350,3 +350,29 @@ html, body { width: 11in; height: 8.5in; overflow: hidden; }
   border-bottom: 1.7px solid var(--paper);
   transform: rotate(-45deg);
 }
+
+/* date line in the header */
+.hd .sub .date {
+  display: block;
+  color: var(--paper);
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  margin-bottom: 3px;
+}
+
+/* a blank to be filled in by hand once the real time is known */
+.fill {
+  display: inline-block;
+  min-width: 58px;
+  border-bottom: 1.5px solid var(--ink-faint);
+}
+
+/* one-line clarification under a block heading */
+.hint {
+  margin: -3px 0 8px;
+  font-size: 7.5pt;
+  line-height: 1.35;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.hint b { font-style: normal; color: var(--ink-soft); }

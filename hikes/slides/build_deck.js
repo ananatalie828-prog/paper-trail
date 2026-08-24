@@ -35,33 +35,35 @@ const DAYS = [
   {
     n: "1",
     title: "Avalanche Lake",
+    date: "TUE · AUG 25",
     where: "Lake McDonald Valley",
     kicker: "ONE TRAIL · OUT & BACK",
     img: "day1-avalanche-lake-map.png",
     blurb:
-      "A steady, forgiving climb beside Avalanche Gorge through old-growth cedar " +
-      "to a cirque lake with waterfalls pouring off the headwall.",
+      "An easy grade the whole way, up Avalanche Gorge through old cedar to a lake " +
+      "with waterfalls coming off the headwall behind it.",
     stats: [
       ["5.9", "mi", "Round trip"],
       ["757", "ft", "Gain"],
       ["3–4", "hr", "Moving"],
     ],
-    note: "Stopping at the foot of the lake instead makes it 4.6 mi.",
+    note: "Stopping at the foot of the lake makes it 4.6 mi.",
     legs: [
       ["D", MOSS, "Drive", "to Avalanche Creek on Going-to-the-Sun Road."],
-      ["H", CORAL, "Hike", "out and back — the car stays at the trailhead."],
-      ["D", MOSS, "Drive", "back out the way you came."],
+      ["H", CORAL, "Hike", "out and back. The car stays at the trailhead."],
+      ["D", MOSS, "Drive", "back the way you came."],
     ],
   },
   {
     n: "2",
-    title: "Highline Trail or Hidden Lake",
+    title: "Summit Group & Lakes Group",
+    date: "WED · AUG 26",
     where: "Logan Pass",
-    kicker: "TWO OPTIONS · BOTH START AT LOGAN PASS",
+    kicker: "TWO GROUPS · BOTH START AT LOGAN PASS",
     img: "day2-logan-pass-map.png",
     options: [
       {
-        tag: "OPTION A",
+        tag: "SUMMIT GROUP",
         color: CORAL,
         name: "Highline → The Loop",
         stats: [
@@ -71,7 +73,7 @@ const DAYS = [
         ],
       },
       {
-        tag: "OPTION B",
+        tag: "LAKES GROUP",
         color: TEAL,
         name: "Hidden Lake Overlook",
         stats: [
@@ -82,32 +84,33 @@ const DAYS = [
       },
     ],
     legs: [
-      ["P", MOSS, "Park at Apgar", "— the car stays there all day."],
+      ["P", MOSS, "Park at Apgar", ". The car stays there all day."],
       ["B", BLUE, "Bus from Apgar", ", transferring at Avalanche Creek."],
-      ["B", BLUE, "Shuttle to Logan Pass", " — both hikes start here."],
-      ["B", BLUE, "Shuttle back", " from The Loop (A) or Logan Pass (B)."],
+      ["B", BLUE, "Shuttle to Logan Pass", " — both groups start here and split."],
+      ["B", BLUE, "Shuttle back", " — summit at The Loop, lakes at Logan Pass."],
     ],
   },
   {
     n: "3",
     title: "Grinnell Glacier & Grinnell Lake",
+    date: "THU · AUG 27",
     where: "Many Glacier",
-    kicker: "ONE TRAIL SYSTEM · TURN AROUND ANY TIME",
+    kicker: "OUT & BACK · TURN AROUND ANY TIME",
     img: "day3-grinnell-map.png",
     blurb:
-      "Climbs the wall above Lake Josephine to Upper Grinnell Lake, right under the " +
-      "glacier. Every viewpoint on the way is a fine place to stop, and the flat " +
-      "Grinnell Lake spur bolts onto the end.",
+      "Climbs the wall above Lake Josephine and ends at Upper Grinnell Lake, below " +
+      "the glacier. Good views most of the way up, so anyone can stop early and " +
+      "head back.",
     stats: [
       ["11.0", "mi", "On foot"],
       ["7.6", "mi", "With boat"],
       ["2,181", "ft", "Gain"],
     ],
-    note: "Grinnell Lake spur adds 1.8 mi round trip, almost flat.",
+    note: "The Grinnell Lake spur adds 1.8 mi round trip and is flat.",
     legs: [
       ["D", MOSS, "Drive", "to Many Glacier and park by the hotel."],
       ["H", CORAL, "Hike", "out and back as far as the group wants."],
-      ["~", BLUE, "Boat", " (optional) skips 1.7 mi each way — ticketed."],
+      ["~", BLUE, "Boat", " (optional) saves 1.7 mi each way."],
     ],
   },
 ];
@@ -164,7 +167,7 @@ function titleSlide() {
   });
 
   s.addText(
-    "Avalanche Lake  ·  Highline Trail or Hidden Lake  ·  Grinnell Glacier",
+    "Tuesday 25 to Thursday 27 August  ·  Avalanche Lake, Logan Pass, Many Glacier",
     {
       x: 0.85, y: 4.05, w: 9.6, h: 0.4, margin: 0,
       fontFace: SANS, fontSize: 15, color: PAPER_DIM,
@@ -192,8 +195,8 @@ function titleSlide() {
   });
 
   s.addNotes(
-    "Three hiking days in Glacier. Day 2 is the only one with a real choice to make, " +
-    "and the only one that depends on the shuttle."
+    "Three hiking days in Glacier. Day 2 splits into two groups and is the only day " +
+    "that depends on the shuttle."
   );
   return s;
 }
@@ -215,22 +218,22 @@ function overviewSlide() {
 
   const cards = [
     {
-      n: "1", name: "Avalanche Lake", sub: "Lake McDonald Valley",
+      n: "1", name: "Avalanche Lake", sub: "Tuesday 25 · Lake McDonald Valley",
       rows: [["5.9 mi", "757 ft"], ["3–4 hr", "out & back"]],
-      move: "Drive there, drive back.", moveColor: MOSS,
-      body: "One trail, one decision: stop at the foot of the lake or walk the shore to the head.",
+      move: "Drive there and back.", moveColor: MOSS,
+      body: "Stop at the foot of the lake, or keep going along the shore to the head for another 0.65 mi each way.",
     },
     {
-      n: "2", name: "Highline or Hidden Lake", sub: "Logan Pass",
-      rows: [["11.8 mi", "one way"], ["or 2.7 mi", "round trip"]],
-      move: "Bus and shuttle — no car.", moveColor: BLUE,
-      body: "The Highline ends at The Loop, not where you started. The shuttle is what makes it possible.",
+      n: "2", name: "Summit & Lakes groups", sub: "Wednesday 26 · Logan Pass",
+      rows: [["11.8 mi", "summit group"], ["2.7 mi", "lakes group"]],
+      move: "Bus and shuttle, no car.", moveColor: BLUE,
+      body: "The summit group finishes at The Loop rather than back at Logan Pass, so the shuttle has to line up.",
     },
     {
-      n: "3", name: "Grinnell Glacier", sub: "Many Glacier",
+      n: "3", name: "Grinnell Glacier", sub: "Thursday 27 · Many Glacier",
       rows: [["11.0 mi", "2,181 ft"], ["7.6 mi", "with boat"]],
       move: "Drive there, drive back.", moveColor: MOSS,
-      body: "Out and back, so you can turn around at any viewpoint. Grinnell Lake adds a flat 1.8 mi.",
+      body: "Out and back, so anyone can turn around at a viewpoint. Grinnell Lake adds a flat 1.8 mi.",
     },
   ];
 
@@ -281,7 +284,7 @@ function overviewSlide() {
     });
   });
 
-  s.addNotes("Day 2 is the one to plan around — it depends on shuttle timing.");
+  s.addNotes("Day 2 is the one to plan around, because it depends on shuttle timing.");
   return s;
 }
 
@@ -298,7 +301,7 @@ function daySlide(d) {
   const x = 0.6, tw = 5.4;
 
   badge(s, x, 0.62, 0.42, CORAL, d.n, "FFFFFF", 14);
-  s.addText("DAY " + d.n + "  ·  " + d.where.toUpperCase(), {
+  s.addText("DAY " + d.n + "  ·  " + d.date + "  ·  " + d.where.toUpperCase(), {
     x: x + 0.56, y: 0.62, w: tw - 0.56, h: 0.42, margin: 0,
     fontFace: SANS, fontSize: 10.5, bold: true, color: FAINT, charSpacing: 2.2,
     valign: "middle",
@@ -362,7 +365,9 @@ function daySlide(d) {
     s.addText(
       [
         { text: lg[2], options: { bold: true, color: INK } },
-        { text: lg[3].startsWith(",") || lg[3].startsWith(" ") ? lg[3] : " " + lg[3],
+        // A continuation that opens with punctuation joins straight onto the
+        // bold lead-in; anything else needs a space first.
+        { text: /^[,.;:!?—]|^\s/.test(lg[3]) ? lg[3] : " " + lg[3],
           options: { color: MUTED } },
       ],
       {
@@ -399,20 +404,20 @@ function logisticsSlide() {
     {
       n: "1", name: "Avalanche Lake",
       chain: [["Drive", MOSS], ["Hike out & back", CORAL], ["Drive", MOSS]],
-      note: "Car sits at the Avalanche Creek lot. Arrive early — it fills before sunrise.",
+      note: "The car sits at the Avalanche Creek lot all day. Nothing to catch and nothing to book.",
     },
     {
-      n: "2", name: "Highline or Hidden Lake",
+      n: "2", name: "Summit & lakes groups",
       chain: [
         ["Park at Apgar", MOSS], ["Bus", BLUE], ["Shuttle to Logan Pass", BLUE],
         ["Hike", CORAL], ["Shuttle back", BLUE],
       ],
-      note: "Transfer at Avalanche both directions. The Highline finishes at The Loop, so check the last westbound departure before starting.",
+      note: "Transfer at Avalanche both directions. We should be long gone by then, but the summit group has to be down at The Loop before the last westbound bus.",
     },
     {
       n: "3", name: "Grinnell Glacier",
       chain: [["Drive", MOSS], ["Hike out & back", CORAL], ["Drive", MOSS]],
-      note: "Optional ticketed boat across Swiftcurrent and Josephine skips 1.7 mi each way. Book ahead.",
+      note: "An optional boat across Swiftcurrent and Josephine saves 1.7 mi each way, in either direction or both.",
     },
   ];
 
@@ -462,8 +467,8 @@ function logisticsSlide() {
   });
 
   s.addNotes(
-    "Day 2 is the only one where the car is left behind. Everything there hangs on " +
-    "the last westbound shuttle from The Loop."
+    "Day 2 is the only day the car is left behind, and it depends on the last " +
+    "westbound shuttle from The Loop."
   );
   return s;
 }

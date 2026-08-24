@@ -8,7 +8,7 @@ Trip materials for three hiking days in Glacier: a one-page map sheet per day
 | File | What it is |
 |---|---|
 | `pdf/day1-avalanche-lake.pdf` | Day 1 sheet — Avalanche Lake |
-| `pdf/day2-logan-pass.pdf` | Day 2 sheet — Highline Trail **or** Hidden Lake Overlook |
+| `pdf/day2-logan-pass.pdf` | Day 2 sheet — summit group **or** lakes group |
 | `pdf/day3-grinnell.pdf` | Day 3 sheet — Grinnell Glacier & Grinnell Lake |
 | `pdf/day4-trail-rules.pdf` | On the trail — food, trash, bears, bathroom |
 | `slides/glacier-hikes.pptx` | 6-slide deck covering all three days |
@@ -22,16 +22,17 @@ panels, meant to be printed once and carried.
 
 ## The three days
 
-| Day | Hike | Distance | Gain | Transport |
-|---|---|---|---|---|
-| 1 | Avalanche Lake | 5.9 mi round trip | 757 ft | Drive both ways |
-| 2 | Highline Trail → The Loop | 11.8 mi one way | +1,000 / −2,300 ft | Bus + shuttle, no car |
-| 2 | *or* Hidden Lake Overlook | 2.7 mi round trip | 550 ft | Bus + shuttle, no car |
-| 3 | Grinnell Glacier | 11.0 mi (7.6 with boat) | 2,181 ft | Drive both ways |
-| 3 | *plus* Grinnell Lake spur | +1.8 mi | flat | — |
+| Date | Day | Hike | Distance | Gain | Transport |
+|---|---|---|---|---|---|
+| Tue 25 Aug | 1 | Avalanche Lake | 5.9 mi round trip | 757 ft | Drive both ways |
+| Wed 26 Aug | 2 | **Summit group** — Highline → The Loop | 11.8 mi one way | +1,000 / −2,300 ft | Bus + shuttle, no car |
+| Wed 26 Aug | 2 | **Lakes group** — Hidden Lake Overlook | 2.7 mi round trip | 550 ft | Bus + shuttle, no car |
+| Thu 27 Aug | 3 | Grinnell Glacier | 11.0 mi (7.6 with boat) | 2,181 ft | Drive both ways |
+| Thu 27 Aug | 3 | *plus* Grinnell Lake spur | +1.8 mi | flat | — |
 
-Day 2 is the one that needs planning: the Highline is point-to-point and
-finishes at The Loop, so it only works if you catch the last westbound shuttle.
+The party splits on day 2: the **summit group** takes the Highline and finishes
+somewhere else, the **lakes group** does Hidden Lake and comes back to Logan
+Pass. Both start from the same visitor center.
 
 `day4-trail-rules.pdf` applies to all three days — what food to carry, packing
 out every scrap of trash, bear safety in grizzly country (make noise, hike as a
@@ -48,11 +49,14 @@ AllTrails and NPS listings before anyone prints these and heads out.
 
 Same goes for anything operational, which changes season to season:
 
-- whether a Going-to-the-Sun Road **vehicle reservation** is required
-- current **shuttle routes and last-departure times** (Day 2 depends on this)
-- **boat schedules and ticket availability** at Many Glacier (Day 3)
+- **the last westbound shuttle from The Loop.** The day 2 sheet has a blank
+  ruled line for it rather than a guessed time — fill it in before printing.
+  If the summit group misses that bus there is no other way back to the car.
+- current **shuttle routes and departure times** generally
+- **boat schedules** at Many Glacier (day 3)
 - **trail status** — snow keeps the Highline and the Grinnell traverse closed
   well into summer some years
+- whether a Going-to-the-Sun Road **vehicle reservation** is required
 
 The maps are deliberately schematic — route shape, junctions, and relative
 distances, not survey geometry. Every sheet says so. Carry a real map.
@@ -66,21 +70,34 @@ page before the trip, and check the trailhead board on the day.
 ```bash
 ./build/render.sh                  # all sheets -> pdf/ + preview/
 ./build/render.sh day2             # just the matching sheet
-python3 build/check_overlaps.py    # fails if any text overlaps or is clipped
+python3 build/check_overlaps.py    # fails on overlapping, clipped or on-line text
 
 python3 build/crop_maps.py         # preview PNGs -> slides/img/
 npm install pptxgenjs              # once
 node slides/build_deck.js          # -> slides/glacier-hikes.pptx
 ```
 
-`check_overlaps.py` is the guard on layout edits, and it checks the two halves
-of a sheet differently. Map labels are absolutely positioned, so it measures
-each `<text>` as a true oriented box — `getBBox()` corners through
-`getScreenCTM()` — and reports the intersection area of any two that collide;
-a rotated label like `GARDEN WALL` is tested as the slanted ribbon it is rather
-than the much larger upright box around it. The flow columns can't overlap, so
-those are checked for being clipped by `overflow: hidden` instead. Text
-crossing a trail line or terrain wash is intentional and not reported.
+`check_overlaps.py` is the guard on layout edits. It runs four checks:
+
+- **Label vs label.** Each map `<text>` is measured as a true oriented box —
+  `getBBox()` corners pushed through `getScreenCTM()` — and any two whose quads
+  intersect are reported with the overlap area. A rotated label like
+  `GARDEN WALL` is tested as the slanted ribbon it actually is, not the much
+  larger upright box around it.
+- **Label vs drawn line.** The map is re-shot with every label hidden, leaving
+  only trails, roads, creeks and boat routes. Pixels under each label are then
+  classified against the flat fills a label may legitimately sit on (paper,
+  terrain wash, lake, glacier); anything else is a line, and enough of them
+  fails the label. Numbers inside waypoint circles carry `class="t-mark"` and
+  are skipped, since sitting on their marker is the point.
+- **Clipping.** Flow columns can't overlap but they can overflow, so `.side`
+  and `.rules` are checked for text cut off by `overflow: hidden`.
+- **Page size.** The sheet must still render 1056×816px, which catches a
+  regression onto a second printed page.
+
+It also warns (without failing) about two labels sitting within a few px of
+each other *on the same line*, which read as one run of text. Stacked
+name-over-detail pairs are 2–3px apart by design and are not reported.
 
 `render.sh` drives headless Chromium. It finds the Playwright-managed build
 automatically; otherwise set `CHROME=/path/to/chrome`.
@@ -103,5 +120,4 @@ Three things to keep in mind when editing:
   page box and uses `minmax(0, 1fr)` grid tracks to stop an over-tall column
   from spilling onto page two.
 - Run `check_overlaps.py` after any layout change. It exits non-zero on a
-  collision or a clip, and it reports the sheet's rendered size, so it catches
-  the two-page regression as well.
+  collision, a label sitting on a drawn line, a clip, or a page-size change.

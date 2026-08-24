@@ -22,9 +22,12 @@ Text crossing a trail line or a terrain wash is intentional and not reported.
 """
 
 import glob
+import io
 import os
 import pathlib
 import sys
+
+from PIL import Image
 
 from playwright.sync_api import sync_playwright
 
@@ -33,12 +36,29 @@ MAPS = ROOT / "hikes" / "maps"
 
 MIN_AREA = 8.0      # px^2 at 1x — ignore antialiasing-scale slivers
 CLIP_SLACK = 1.0    # px a glyph box may poke past its clipping column
+TIGHT_GAP = 4.0     # px — labels this close read as one run, warn but don't fail
+
+# --- text-over-line detection -------------------------------------------------
+# Flat fills a label may legitimately sit on: the paper, the two terrain washes,
+# lake water, glacier ice. Anything far from all of these is a drawn line — a
+# trail, road, creek, boat route or map furniture — and a label sitting on one
+# is hard to read.
+BG_COLORS = [
+    (0xF4, 0xF1, 0xEA),   # paper
+    (0xEA, 0xE5, 0xDA),   # terrain wash
+    (0xEF, 0xEB, 0xE2),   # terrain wash, lighter
+    (0xCB, 0xDE, 0xE9),   # lake fill
+    (0xE4, 0xEE, 0xF3),   # glacier fill
+]
+BG_TOLERANCE = 40     # RGB distance; antialiased blends of two fills stay under
+LINE_PIXELS = 26      # line pixels inside a label box (at 2x) before it counts
 
 MEASURE_JS = r"""
 () => {
   /* ---- map: every SVG <text> as an oriented quad ---- */
   const labels = [];
-  for (const el of document.querySelectorAll('.map svg text')) {
+  // .t-mark is a number inside a waypoint circle; it is meant to sit on it.
+  for (const el of document.querySelectorAll('.map svg text:not(.t-mark)')) {
     const s = getComputedStyle(el);
     if (s.visibility === 'hidden' || s.display === 'none') continue;
     const txt = el.textContent.replace(/\s+/g, ' ').trim();
@@ -144,6 +164,72 @@ def clip_area(subject, clipper):
     return abs(area(out))
 
 
+def side_by_side_gap(a, b):
+    """Horizontal gap between two labels that share a line, else None.
+
+    A place name stacked over its own detail line sits 2-3px away and is meant
+    to; two unrelated labels that end up shoulder to shoulder on the same line
+    read as one run of text and are the thing worth flagging. So this only
+    measures a gap when the two boxes genuinely overlap vertically.
+    """
+    def bounds(q):
+        xs = [p["x"] for p in q]
+        ys = [p["y"] for p in q]
+        return min(xs), max(xs), min(ys), max(ys)
+
+    ax0, ax1, ay0, ay1 = bounds(a)
+    bx0, bx1, by0, by1 = bounds(b)
+
+    shared = min(ay1, by1) - max(ay0, by0)
+    if shared < 0.5 * min(ay1 - ay0, by1 - by0):
+        return None                       # different lines, not side by side
+    return max(bx0 - ax1, ax0 - bx1)      # negative means they already overlap
+
+
+def count_line_pixels(px, w, h, quad, scale, origin):
+    """Line pixels under a label, using the map rendered with all text hidden.
+
+    The label is tested as its true oriented quad, so a rotated label only
+    samples the slanted ribbon it actually occupies.
+    """
+    pts = [((p["x"] - origin[0]) * scale, (p["y"] - origin[1]) * scale) for p in quad]
+
+    def area(poly):
+        s = 0.0
+        for i in range(len(poly)):
+            j = (i + 1) % len(poly)
+            s += poly[i][0] * poly[j][1] - poly[j][0] * poly[i][1]
+        return s / 2.0
+
+    if area(pts) < 0:
+        pts = pts[::-1]
+
+    def inside(x, y):
+        for i in range(4):
+            ax, ay = pts[i]
+            bx, by = pts[(i + 1) % 4]
+            if (bx - ax) * (y - ay) - (by - ay) * (x - ax) < 0:
+                return False
+        return True
+
+    x0 = max(0, int(min(p[0] for p in pts)))
+    x1 = min(w - 1, int(max(p[0] for p in pts)) + 1)
+    y0 = max(0, int(min(p[1] for p in pts)))
+    y1 = min(h - 1, int(max(p[1] for p in pts)) + 1)
+
+    hits = 0
+    for y in range(y0, y1 + 1):
+        for x in range(x0, x1 + 1):
+            if not inside(x + 0.5, y + 0.5):
+                continue
+            r, g, b = px[x, y][:3]
+            best = min((r - c[0]) ** 2 + (g - c[1]) ** 2 + (b - c[2]) ** 2
+                       for c in BG_COLORS)
+            if best > BG_TOLERANCE * BG_TOLERANCE:
+                hits += 1
+    return hits
+
+
 def find_chrome() -> str:
     if os.environ.get("CHROME"):
         return os.environ["CHROME"]
@@ -175,21 +261,53 @@ def main() -> int:
             data = page.evaluate(MEASURE_JS)
             labels, clipped = data["labels"], data["clipped"]
 
-            hits = []
+            # Re-shoot the map with every label hidden, so what remains is only
+            # the drawn lines. Then look under each label's box.
+            on_lines = []
+            if labels:
+                box = page.evaluate(
+                    "() => { const m = document.querySelector('.map')"
+                    ".getBoundingClientRect(); return {x: m.x, y: m.y}; }"
+                )
+                page.add_style_tag(content=".map svg text { visibility: hidden !important }")
+                page.wait_for_timeout(80)
+                shot = page.locator(".map").screenshot()
+                page.reload()
+                page.wait_for_timeout(150)
+
+                im = Image.open(io.BytesIO(shot)).convert("RGB")
+                px = im.load()
+                scale = im.width / page.evaluate(
+                    "() => document.querySelector('.map').getBoundingClientRect().width"
+                )
+                for lb in labels:
+                    n = count_line_pixels(px, im.width, im.height, lb["quad"],
+                                          scale, (box["x"], box["y"]))
+                    if n >= LINE_PIXELS:
+                        on_lines.append((n, lb["text"]))
+                on_lines.sort(key=lambda t: -t[0])
+
+            hits, tight = [], []
             for i in range(len(labels)):
                 for j in range(i + 1, len(labels)):
                     a, b = labels[i], labels[j]
                     ar = clip_area(a["quad"], b["quad"])
                     if ar >= MIN_AREA:
                         hits.append((ar, a["text"], b["text"]))
+                    elif ar == 0:
+                        gap = side_by_side_gap(a["quad"], b["quad"])
+                        if gap is not None and 0 <= gap < TIGHT_GAP:
+                            tight.append((gap, a["text"], b["text"]))
             hits.sort(key=lambda h: -h[0])
+            tight.sort(key=lambda t: t[0])
 
             clip = [c for c in clipped if c["by"] > CLIP_SLACK]
             sw, sh = data["sheet"]["w"], data["sheet"]["h"]
             bad_size = abs(sw - 1056) > 1 or abs(sh - 816) > 1
 
-            ok = not hits and not clip and not bad_size
-            faults += len(hits) + len(clip) + (1 if bad_size else 0)
+            ok = not hits and not clip and not bad_size and not on_lines
+            faults += (len(hits) + len(clip) + len(on_lines)
+                       + (1 if bad_size else 0))
             print(f"{'OK ' if ok else '!! '}{sheet.name}   "
                   f"{len(labels)} map labels, {len(clipped)} clip candidates")
 
@@ -200,6 +318,12 @@ def main() -> int:
             for c in clip:
                 print(f"     clipped {c['by']:5.1f}px {c['side']:>6} of .{c['container']}"
                       f"   {c['text']!r}")
+            # Not a failure: two labels that merely sit very close. Worth a look,
+            # because at a few px apart they read as a single run of text.
+            for gap, t1, t2 in tight:
+                print(f"     tight   {gap:5.1f}px gap    {t1!r}\n{'':22}~  {t2!r}")
+            for n, t in on_lines:
+                print(f"     on-line {n:5d}px        {t!r}")
 
         browser.close()
 
