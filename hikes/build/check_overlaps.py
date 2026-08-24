@@ -36,7 +36,7 @@ MAPS = ROOT / "hikes" / "maps"
 
 MIN_AREA = 8.0      # px^2 at 1x — ignore antialiasing-scale slivers
 CLIP_SLACK = 1.0    # px a glyph box may poke past its clipping column
-TIGHT_GAP = 4.0     # px — labels this close read as one run, warn but don't fail
+CLEARANCE = 7.0     # px two unrelated labels must keep from each other
 
 # --- text-over-line detection -------------------------------------------------
 # Flat fills a label may legitimately sit on: the paper, the two terrain washes,
@@ -51,7 +51,7 @@ BG_COLORS = [
     (0xE4, 0xEE, 0xF3),   # glacier fill
 ]
 BG_TOLERANCE = 40     # RGB distance; antialiased blends of two fills stay under
-LINE_PIXELS = 26      # line pixels inside a label box (at 2x) before it counts
+LINE_PIXELS = 10      # line pixels inside a label box (at 2x) before it counts
 
 MEASURE_JS = r"""
 () => {
@@ -164,13 +164,16 @@ def clip_area(subject, clipper):
     return abs(area(out))
 
 
-def side_by_side_gap(a, b):
-    """Horizontal gap between two labels that share a line, else None.
+def crowding(a, b):
+    """How close two labels sit, and whether they are a deliberate pair.
 
-    A place name stacked over its own detail line sits 2-3px away and is meant
-    to; two unrelated labels that end up shoulder to shoulder on the same line
-    read as one run of text and are the thing worth flagging. So this only
-    measures a gap when the two boxes genuinely overlap vertically.
+    A place name over its own detail line is set at the same anchor a dozen px
+    below and is meant to read as one block. Two *unrelated* labels that drift
+    that close read as one block too, which is the bug. Telling them apart is
+    what the alignment test is for: a real pair shares an edge or a centre.
+
+    Returns (gap, is_pair). gap is the larger of the two axis gaps, negative
+    where the boxes overlap on that axis.
     """
     def bounds(q):
         xs = [p["x"] for p in q]
@@ -180,10 +183,15 @@ def side_by_side_gap(a, b):
     ax0, ax1, ay0, ay1 = bounds(a)
     bx0, bx1, by0, by1 = bounds(b)
 
-    shared = min(ay1, by1) - max(ay0, by0)
-    if shared < 0.5 * min(ay1 - ay0, by1 - by0):
-        return None                       # different lines, not side by side
-    return max(bx0 - ax1, ax0 - bx1)      # negative means they already overlap
+    gap_x = max(bx0 - ax1, ax0 - bx1)
+    gap_y = max(by0 - ay1, ay0 - by1)
+
+    aligned = (abs(ax0 - bx0) < 3                       # same left edge
+               or abs(ax1 - bx1) < 3                    # same right edge
+               or abs((ax0 + ax1) - (bx0 + bx1)) < 6)   # same centre
+    is_pair = aligned and 0 <= gap_y <= 10 and gap_x < 0
+
+    return max(gap_x, gap_y), is_pair
 
 
 def count_line_pixels(px, w, h, quad, scale, origin):
@@ -295,8 +303,8 @@ def main() -> int:
                     if ar >= MIN_AREA:
                         hits.append((ar, a["text"], b["text"]))
                     elif ar == 0:
-                        gap = side_by_side_gap(a["quad"], b["quad"])
-                        if gap is not None and 0 <= gap < TIGHT_GAP:
+                        gap, is_pair = crowding(a["quad"], b["quad"])
+                        if not is_pair and gap < CLEARANCE:
                             tight.append((gap, a["text"], b["text"]))
             hits.sort(key=lambda h: -h[0])
             tight.sort(key=lambda t: t[0])
@@ -305,8 +313,9 @@ def main() -> int:
             sw, sh = data["sheet"]["w"], data["sheet"]["h"]
             bad_size = abs(sw - 1056) > 1 or abs(sh - 816) > 1
 
-            ok = not hits and not clip and not bad_size and not on_lines
-            faults += (len(hits) + len(clip) + len(on_lines)
+            ok = (not hits and not clip and not bad_size
+                  and not on_lines and not tight)
+            faults += (len(hits) + len(clip) + len(on_lines) + len(tight)
                        + (1 if bad_size else 0))
             print(f"{'OK ' if ok else '!! '}{sheet.name}   "
                   f"{len(labels)} map labels, {len(clipped)} clip candidates")
@@ -318,10 +327,8 @@ def main() -> int:
             for c in clip:
                 print(f"     clipped {c['by']:5.1f}px {c['side']:>6} of .{c['container']}"
                       f"   {c['text']!r}")
-            # Not a failure: two labels that merely sit very close. Worth a look,
-            # because at a few px apart they read as a single run of text.
             for gap, t1, t2 in tight:
-                print(f"     tight   {gap:5.1f}px gap    {t1!r}\n{'':22}~  {t2!r}")
+                print(f"     crowded {gap:5.1f}px gap    {t1!r}\n{'':22}~  {t2!r}")
             for n, t in on_lines:
                 print(f"     on-line {n:5d}px        {t!r}")
 

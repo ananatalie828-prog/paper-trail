@@ -78,7 +78,7 @@ npm install pptxgenjs              # once
 node slides/build_deck.js          # -> slides/glacier-hikes.pptx
 ```
 
-`check_overlaps.py` is the guard on layout edits. It runs four checks:
+`check_overlaps.py` is the guard on layout edits. It runs five checks:
 
 - **Label vs label.** Each map `<text>` is measured as a true oriented box —
   `getBBox()` corners pushed through `getScreenCTM()` — and any two whose quads
@@ -96,9 +96,11 @@ node slides/build_deck.js          # -> slides/glacier-hikes.pptx
 - **Page size.** The sheet must still render 1056×816px, which catches a
   regression onto a second printed page.
 
-It also warns (without failing) about two labels sitting within a few px of
-each other *on the same line*, which read as one run of text. Stacked
-name-over-detail pairs are 2–3px apart by design and are not reported.
+- **Crowding.** Two labels that stop just short of touching still read as one
+  block. Any two that come within 7px are failed — unless they are a deliberate
+  pair, which is detected by alignment: a place name and its detail line share
+  a left edge, a right edge or a centre and sit within 10px vertically.
+  Everything else has to keep its distance.
 
 `render.sh` drives headless Chromium. It finds the Playwright-managed build
 automatically; otherwise set `CHROME=/path/to/chrome`.
