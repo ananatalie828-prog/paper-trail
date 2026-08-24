@@ -151,3 +151,7 @@ html, body {
 .stops .pin.alt    { background: var(--alt); }
 .stops b { color: var(--ink); }
 .stops .det { color: var(--ink-soft); }
+
+.pbody .timebar { padding: 10px 13px; margin-top: 12px; }
+.pbody .timebar .t { font-size: 19pt; }
+.pbody .timebar .l { font-size: 9pt; }
