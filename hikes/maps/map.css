@@ -1,0 +1,228 @@
+/* Shared styling for Glacier NP hike map sheets.
+   Page target: US Letter, landscape (11in x 8.5in). */
+
+:root {
+  --paper:      #F4F1EA;
+  --paper-2:    #EAE5DA;
+  --ink:        #2B2B2B;
+  --ink-soft:   #6B665E;
+  --ink-faint:  #9A948A;
+  --rule:       #D6D0C4;
+
+  --trail:      #E2574C;  /* primary route */
+  --trail-dk:   #B23E34;
+  --alt:        #2E7D8A;  /* secondary / option B route */
+  --alt-dk:     #1F5A64;
+  --boat:       #3D6EA5;  /* boat shuttle */
+
+  --water:      #CBDEE9;
+  --water-line: #8FB4C9;
+  --road:       #A8A399;
+  --other:      #BDB7AC;  /* other trails, dashed */
+  --rock:       #8C867B;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  font-family: "Liberation Sans", "DejaVu Sans", Arial, sans-serif;
+  color: var(--ink);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.sheet {
+  width: 11in;
+  height: 8.5in;
+  background: var(--paper);
+  display: grid;
+  /* minmax(0,1fr) so an over-tall column can never stretch the row and
+     push the sheet onto a second printed page */
+  grid-template-columns: 3.35in minmax(0, 1fr);
+  grid-template-rows: 0.92in minmax(0, 1fr);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---------- header ---------- */
+
+.hd {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.22in;
+  padding: 0 0.42in;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.hd .day {
+  font-size: 9pt;
+  font-weight: bold;
+  letter-spacing: 0.14em;
+  padding: 4px 10px;
+  border: 1.5px solid rgba(244, 241, 234, 0.55);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.hd h1 {
+  margin: 0;
+  font-size: 23pt;
+  font-weight: bold;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.hd .sub {
+  margin-left: auto;
+  text-align: right;
+  font-size: 8.5pt;
+  letter-spacing: 0.1em;
+  color: rgba(244, 241, 234, 0.72);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* ---------- left column ---------- */
+
+.side {
+  padding: 0.26in 0.3in 0.24in 0.42in;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15in;
+  overflow: hidden;
+}
+
+.blk > h2 {
+  margin: 0 0 7px;
+  font-size: 8pt;
+  font-weight: bold;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* option cards (the at-a-glance stats) */
+
+.opt {
+  border-left: 4px solid var(--trail);
+  padding: 2px 0 2px 9px;
+  margin-bottom: 9px;
+}
+.opt.b { border-left-color: var(--alt); }
+
+.opt .name {
+  font-size: 11pt;
+  font-weight: bold;
+  line-height: 1.15;
+  margin-bottom: 3px;
+}
+.opt .name small {
+  display: block;
+  font-size: 7.5pt;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  color: var(--trail);
+  margin-bottom: 2px;
+}
+.opt.b .name small { color: var(--alt); }
+
+.stats {
+  display: flex;
+  gap: 0.16in;
+  margin-top: 4px;
+}
+.stats div { line-height: 1.15; }
+.stats .v { font-size: 12pt; font-weight: bold; letter-spacing: -0.02em; }
+.stats .k {
+  font-size: 6.5pt;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.opt .note {
+  font-size: 8pt;
+  color: var(--ink-soft);
+  line-height: 1.35;
+  margin-top: 5px;
+}
+
+/* getting there / back */
+
+.leg {
+  display: flex;
+  gap: 8px;
+  font-size: 8.5pt;
+  line-height: 1.3;
+  padding: 5px 0;
+  border-bottom: 1px dotted var(--rule);
+}
+.leg:last-child { border-bottom: 0; }
+
+.leg .ic {
+  flex: 0 0 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 7pt;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.leg.drive  .ic { background: #6E7B52; }
+.leg.bus    .ic { background: var(--boat); }
+.leg.boat   .ic { background: var(--boat); }
+.leg.hike   .ic { background: var(--trail); }
+
+.leg b { font-weight: bold; }
+.leg .t { color: var(--ink-soft); }
+.leg .t b { color: var(--ink); }
+
+.callout {
+  margin-top: auto;
+  background: var(--paper-2);
+  border-left: 3px solid var(--rock);
+  padding: 7px 9px;
+  font-size: 7.5pt;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.callout b { color: var(--ink); }
+
+/* ---------- map ---------- */
+
+.map { position: relative; overflow: hidden; }
+.map svg { display: block; width: 100%; height: 100%; }
+
+/* svg type scale */
+.t-peak   { font-size: 11px; fill: var(--rock); letter-spacing: 0.04em; }
+.t-water  { font-size: 11px; fill: #5E8AA3; font-style: italic; }
+.t-place  { font-size: 12px; fill: var(--ink); font-weight: bold; }
+.t-small  { font-size: 10px; fill: var(--ink-soft); }
+.t-road   { font-size: 10px; fill: #857F74; letter-spacing: 0.06em; }
+.t-dist   { font-size: 12px; font-weight: bold; fill: var(--trail-dk); }
+.t-dist.b { fill: var(--alt-dk); }
+.t-ridge  { font-size: 13px; fill: #A79F91; letter-spacing: 0.3em; font-weight: bold; }
+.t-huge   { font-size: 21px; font-weight: bold; letter-spacing: 0.04em; }
+
+.legend-t { font-size: 9px; fill: var(--ink-soft); letter-spacing: 0.02em; }
+
+/* ---------- print ---------- */
+@page { size: 11in 8.5in; margin: 0; }
+
+/* One sheet, one page. Clamping html/body to the page box keeps a stray
+   fraction of a pixel from spilling into a blank second page. */
+html, body { width: 11in; height: 8.5in; overflow: hidden; }
+
+@media print {
+  html, body { background: var(--paper); }
+  .sheet { box-shadow: none; break-after: avoid; page-break-after: avoid; }
+}

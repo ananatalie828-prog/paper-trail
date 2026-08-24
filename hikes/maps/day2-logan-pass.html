@@ -1,0 +1,261 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Day 2 — Highline Trail or Hidden Lake Overlook</title>
+<link rel="stylesheet" href="map.css">
+
+<div class="sheet">
+
+  <div class="hd">
+    <span class="day">DAY 2</span>
+    <h1>Highline Trail <span style="font-weight:normal;opacity:.55">or</span> Hidden Lake</h1>
+    <div class="sub">GLACIER NATIONAL PARK<br>LOGAN PASS</div>
+  </div>
+
+  <!-- ============ left column ============ -->
+  <div class="side">
+
+    <div class="blk">
+      <h2>Pick One</h2>
+
+      <div class="opt">
+        <div class="name"><small>OPTION A · POINT TO POINT</small>Highline Trail → The Loop</div>
+        <div class="stats">
+          <div><div class="v">11.8<span style="font-size:8pt"> mi</span></div><div class="k">One way</div></div>
+          <div><div class="v">1,000<span style="font-size:8pt"> ft</span></div><div class="k">Up</div></div>
+          <div><div class="v">2,300<span style="font-size:8pt"> ft</span></div><div class="k">Down</div></div>
+          <div><div class="v">6–8<span style="font-size:8pt"> hr</span></div><div class="k">Moving</div></div>
+        </div>
+        <div class="note">Ledge traverse under the Garden Wall to Granite Park Chalet, then a
+          long knee-heavy descent to The Loop. <b>You do not come back to Logan Pass</b> —
+          the shuttle is what makes this work.</div>
+      </div>
+
+      <div class="opt b">
+        <div class="name"><small>OPTION B · OUT &amp; BACK</small>Hidden Lake Overlook</div>
+        <div class="stats">
+          <div><div class="v">2.7<span style="font-size:8pt"> mi</span></div><div class="k">Round trip</div></div>
+          <div><div class="v">550<span style="font-size:8pt"> ft</span></div><div class="k">Gain</div></div>
+          <div><div class="v">1½–2<span style="font-size:8pt"> hr</span></div><div class="k">Moving</div></div>
+        </div>
+        <div class="note">Boardwalk and stairs straight from the visitor center. Returns to
+          Logan Pass, so you ride back from where you started.</div>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h2>Getting There &amp; Back</h2>
+      <div class="leg drive">
+        <div class="ic">1</div>
+        <div class="t"><b>Park at Apgar Visitor Center.</b> The car stays here all day.</div>
+      </div>
+      <div class="leg bus">
+        <div class="ic">2</div>
+        <div class="t"><b>Bus from Apgar</b> — board the free park shuttle,
+          <b>transfer at Avalanche Creek</b> to the east-side bus.</div>
+      </div>
+      <div class="leg bus">
+        <div class="ic">3</div>
+        <div class="t"><b>Shuttle up to Logan Pass.</b> Both hikes start at the
+          visitor center.</div>
+      </div>
+      <div class="leg bus">
+        <div class="ic">4</div>
+        <div class="t"><b>Shuttle back to the car</b> — from <b>The Loop</b> after
+          Option A, or from <b>Logan Pass</b> after Option B. Transfer again at
+          Avalanche.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>The last bus is the whole plan.</b> Option A only works if you are down at The Loop
+      before the final westbound shuttle — check the day's last-departure time before you
+      start, and turn around at the chalet if you are behind. Snow can keep the Highline
+      closed into July; confirm it is open.
+    </div>
+  </div>
+
+  <!-- ============ map ============ -->
+  <div class="map">
+  <svg viewBox="0 0 765 758" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5"
+              markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#E2574C"/>
+      </marker>
+      <marker id="arrowB" viewBox="0 0 10 10" refX="8" refY="5"
+              markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#2E7D8A"/>
+      </marker>
+      <marker id="arrowInk" viewBox="0 0 10 10" refX="8" refY="5"
+              markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#2B2B2B"/>
+      </marker>
+    </defs>
+
+    <rect width="765" height="758" fill="#F4F1EA"/>
+
+    <!-- ---- terrain wash: the Garden Wall ridge ---- -->
+    <path d="M 470,40 C 420,110 360,190 300,240 C 240,290 180,320 120,336
+             L 120,40 Z" fill="#EAE5DA"/>
+    <!-- ---- terrain wash: Clements / Cannon massif ---- -->
+    <path d="M 330,758 C 380,676 470,646 560,668 C 640,688 700,730 730,758 Z"
+          fill="#EFEBE2"/>
+
+    <!-- ---- Hidden Lake ---- -->
+    <ellipse cx="540" cy="708" rx="56" ry="25" transform="rotate(-10 540 708)"
+             fill="#CBDEE9" stroke="#8FB4C9" stroke-width="1.5"/>
+    <text class="t-water" x="540" y="712" text-anchor="middle">Hidden Lake</text>
+
+    <!-- ---- Going-to-the-Sun Road ---- -->
+    <!-- lower-left branch, below the hairpin -->
+    <path d="M 92,748 C 108,660 128,566 150,472"
+          fill="none" stroke="#A8A399" stroke-width="7" stroke-linecap="round"/>
+    <!-- hairpin at The Loop, then east and up to Logan Pass and on to St. Mary -->
+    <path d="M 150,472 C 176,512 200,556 244,590 C 300,632 386,620 440,582
+             C 508,532 556,506 600,480 C 650,450 700,432 752,420"
+          fill="none" stroke="#A8A399" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 92,748 C 108,660 128,566 150,472 C 176,512 200,556 244,590
+             C 300,632 386,620 440,582 C 508,532 556,506 600,480
+             C 650,450 700,432 752,420"
+          fill="none" stroke="#F4F1EA" stroke-width="1.6"
+          stroke-dasharray="7 9" stroke-linecap="round"/>
+    <text class="t-road" x="300" y="642" transform="rotate(-8 300 642)">Going-to-the-Sun Road</text>
+    <text class="t-small" x="746" y="404" text-anchor="end">to St. Mary →</text>
+    <text class="t-small" x="46" y="722">↙ to Avalanche &amp; Apgar</text>
+
+    <!-- ---- other trails (dashed, context only) ---- -->
+    <g fill="none" stroke="#BDB7AC" stroke-width="2.6" stroke-dasharray="7 6"
+       stroke-linecap="round">
+      <path d="M 300,150 C 292,112 288,80 286,48"/>
+      <path d="M 300,150 C 336,120 376,96 418,80 C 462,62 510,52 552,48"/>
+    </g>
+    <text class="t-small" x="292" y="38" text-anchor="middle" style="fill:#9A948A">to Fifty Mountain</text>
+    <text class="t-small" x="562" y="46" style="fill:#9A948A">Swiftcurrent Pass →<tspan x="562" dy="13">to Many Glacier</tspan></text>
+
+    <!-- ============ OPTION A — Highline Trail ============ -->
+    <!-- Logan Pass -> Grinnell Glacier Overlook junction -->
+    <path d="M 596,462 C 578,414 566,368 550,322 C 530,268 504,218 470,182
+             C 448,158 424,164 400,176"
+          fill="none" stroke="#E2574C" stroke-width="5.5" stroke-linecap="round"/>
+    <!-- junction -> Granite Park Chalet -->
+    <path d="M 400,176 C 368,164 336,154 300,150"
+          fill="none" stroke="#E2574C" stroke-width="5.5" stroke-linecap="round"/>
+    <!-- Granite Park Chalet -> The Loop -->
+    <path d="M 300,150 C 264,200 232,272 206,348 C 186,404 164,442 150,468"
+          fill="none" stroke="#E2574C" stroke-width="5.5" stroke-linecap="round"/>
+
+    <!-- optional spur to Grinnell Glacier Overlook -->
+    <path d="M 400,176 C 418,148 436,120 450,98"
+          fill="none" stroke="#E2574C" stroke-width="4" stroke-linecap="round"
+          stroke-dasharray="8 7"/>
+
+    <text class="t-ridge" x="556" y="330" transform="rotate(-64 556 330)">GARDEN WALL</text>
+
+    <!-- ============ OPTION B — Hidden Lake Overlook ============ -->
+    <path d="M 606,498 C 610,540 606,584 598,626"
+          fill="none" stroke="#2E7D8A" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M 598,626 C 590,656 574,680 556,692"
+          fill="none" stroke="#2E7D8A" stroke-width="4" stroke-linecap="round"
+          stroke-dasharray="8 7"/>
+
+    <!-- ---- distances ---- -->
+    <text class="t-dist" x="508" y="264" text-anchor="end">6.9</text>
+    <text class="t-dist" x="350" y="146" text-anchor="middle">0.7</text>
+    <text class="t-dist" x="232" y="346">4.2</text>
+    <text class="t-dist" x="462" y="140">0.9</text>
+    <text class="t-dist b" x="626" y="566">1.4</text>
+    <text class="t-dist b" x="614" y="662">1.2</text>
+
+    <!-- ---- waypoints ---- -->
+    <!-- Logan Pass (shared start) -->
+    <circle cx="600" cy="480" r="13" fill="#2B2B2B"/>
+    <text x="600" y="485" text-anchor="middle" fill="#F4F1EA" style="font-size:12px;font-weight:bold">S</text>
+
+    <circle cx="400" cy="176" r="11" fill="#fff" stroke="#E2574C" stroke-width="3"/>
+    <circle cx="300" cy="150" r="12" fill="#E2574C"/>
+    <circle cx="150" cy="470" r="13" fill="#2B2B2B"/>
+    <text x="150" y="475" text-anchor="middle" fill="#F4F1EA" style="font-size:12px;font-weight:bold">E</text>
+    <circle cx="450" cy="98" r="10" fill="#fff" stroke="#E2574C" stroke-width="3"/>
+    <circle cx="598" cy="626" r="12" fill="#2E7D8A"/>
+
+    <!-- ---- place labels ---- -->
+    <text class="t-place" x="624" y="474">Logan Pass</text>
+    <text class="t-small" x="624" y="488">visitor center · 6,646 ft</text>
+
+    <text class="t-place" x="286" y="128" text-anchor="end">Granite Park Chalet</text>
+    <text class="t-small" x="286" y="142" text-anchor="end">7.6 mi · 6,680 ft</text>
+
+    <text class="t-small" x="390" y="214" text-anchor="end">Grinnell Glacier</text>
+    <text class="t-small" x="390" y="226" text-anchor="end">Overlook jct</text>
+
+    <text class="t-place" x="466" y="88">Grinnell Glacier Overlook</text>
+    <text class="t-small" x="466" y="102">spur · +900 ft each way</text>
+
+    <text class="t-place" x="128" y="450" text-anchor="end">The Loop</text>
+    <text class="t-small" x="128" y="464" text-anchor="end">4,350 ft · shuttle stop</text>
+
+    <text class="t-place" x="620" y="620" style="fill:#1F5A64">Hidden Lake Overlook</text>
+    <text class="t-small" x="620" y="634">1.4 mi · turn around here</text>
+
+    <text class="t-small" x="624" y="690" style="fill:#1F5A64">
+      steep drop to the shore<tspan x="624" dy="12">— adds 2.7 mi round trip</tspan></text>
+
+    <!-- ---- peaks ---- -->
+    <g fill="#8C867B">
+      <path d="M 500,596 l 11,-20 l 11,20 z"/>
+      <path d="M 400,716 l 11,-20 l 11,20 z"/>
+      <path d="M 356,262 l 11,-20 l 11,20 z"/>
+    </g>
+    <text class="t-peak" x="494" y="594" text-anchor="end">Clements Mountain</text>
+    <text class="t-peak" x="394" y="714" text-anchor="end">Mount Cannon</text>
+    <text class="t-peak" x="350" y="260" text-anchor="end">Mt. Gould</text>
+
+    <!-- ---- START / END callouts ---- -->
+    <text class="t-huge" x="548" y="428" text-anchor="end" fill="#2B2B2B">START</text>
+    <text class="t-small" x="548" y="444" text-anchor="end">both options</text>
+    <path d="M 556,432 C 574,444 580,452 588,464"
+          fill="none" stroke="#2B2B2B" stroke-width="2.2" marker-end="url(#arrowInk)"/>
+
+    <text class="t-huge" x="48" y="380" fill="#E2574C">END</text>
+    <text class="t-small" x="48" y="396" style="fill:#B23E34">Option A finishes here</text>
+    <path d="M 96,406 C 118,428 134,448 142,458"
+          fill="none" stroke="#E2574C" stroke-width="2.2" marker-end="url(#arrowA)"/>
+
+    <!-- ---- legend ---- -->
+    <g transform="translate(44,92)">
+      <text x="0" y="0" class="legend-t" style="font-weight:bold;letter-spacing:.14em;fill:#9A948A">KEY</text>
+      <line x1="0" y1="16" x2="28" y2="16" stroke="#E2574C" stroke-width="5" stroke-linecap="round"/>
+      <text x="36" y="20" class="legend-t">A — Highline Trail</text>
+      <line x1="0" y1="34" x2="28" y2="34" stroke="#2E7D8A" stroke-width="5" stroke-linecap="round"/>
+      <text x="36" y="38" class="legend-t">B — Hidden Lake</text>
+      <line x1="0" y1="52" x2="28" y2="52" stroke="#E2574C" stroke-width="4"
+            stroke-dasharray="7 6" stroke-linecap="round"/>
+      <text x="36" y="56" class="legend-t">Optional spur</text>
+      <line x1="0" y1="70" x2="28" y2="70" stroke="#A8A399" stroke-width="6" stroke-linecap="round"/>
+      <text x="36" y="74" class="legend-t">Going-to-the-Sun Road</text>
+    </g>
+
+    <!-- ---- north arrow ---- -->
+    <g transform="translate(726,124)">
+      <path d="M 0,-28 L 9,11 L 0,3 L -9,11 Z" fill="#6B665E"/>
+      <text x="0" y="30" text-anchor="middle" class="t-small"
+            style="font-weight:bold;letter-spacing:.1em">N</text>
+    </g>
+
+    <!-- ---- scale bar ---- -->
+    <g transform="translate(48,232)">
+      <text x="0" y="-11" class="legend-t" style="letter-spacing:.08em">APPROXIMATE</text>
+      <line x1="0" y1="0" x2="140" y2="0" stroke="#6B665E" stroke-width="2.5"/>
+      <line x1="0" y1="-5" x2="0" y2="5" stroke="#6B665E" stroke-width="2.5"/>
+      <line x1="70" y1="-4" x2="70" y2="4" stroke="#6B665E" stroke-width="2"/>
+      <line x1="140" y1="-5" x2="140" y2="5" stroke="#6B665E" stroke-width="2.5"/>
+      <text x="0" y="20" class="legend-t">0</text>
+      <text x="70" y="20" class="legend-t" text-anchor="middle">1</text>
+      <text x="140" y="20" class="legend-t" text-anchor="middle">2 mi</text>
+    </g>
+
+    <text class="legend-t" x="750" y="748" text-anchor="end" style="fill:#B0AAA0">
+      Schematic — not to scale. Not for navigation.</text>
+  </svg>
+  </div>
+</div>

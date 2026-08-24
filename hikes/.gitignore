@@ -1,0 +1,8 @@
+# npm dependency for the deck generator (npm install pptxgenjs)
+node_modules/
+package-lock.json
+package.json
+
+# visual-QA scratch: LibreOffice PDF render of the deck and its slide images
+slides/glacier-hikes.pdf
+slides/slide-*.jpg
