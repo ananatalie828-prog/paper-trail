@@ -15,6 +15,7 @@ from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SRC = ROOT / "hikes" / "preview"
+MAPS = ROOT / "hikes" / "maps"
 DST = ROOT / "hikes" / "slides" / "img"
 
 DPI = 96
@@ -33,6 +34,13 @@ def main() -> int:
     left, top = round(SIDE_IN * DPI * SCALE), round(HEAD_IN * DPI * SCALE)
 
     for src in sheets:
+        # Not every sheet has a map — the trail-practices sheet is two columns
+        # of text, so there is nothing to crop out of it.
+        html = MAPS / f"{src.stem}.html"
+        if not html.exists() or 'class="map"' not in html.read_text():
+            print(f"  {src.name:32s} -- no map panel, skipped")
+            continue
+
         im = Image.open(src)
         crop = im.crop((left, top, im.width, im.height))
         out = DST / f"{src.stem}-map.png"
